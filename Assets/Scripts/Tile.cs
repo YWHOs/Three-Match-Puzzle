@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] int xIndex;
-    [SerializeField] int yIndex;
+    public int xIndex;
+    public int yIndex;
 
     Board board;
     // Start is called before the first frame update
@@ -19,5 +19,27 @@ public class Tile : MonoBehaviour
         xIndex = _xIndex;
         yIndex = _yIndex;
         board = _board;
+    }
+
+    void OnMouseDown()
+    {
+        if(board != null)
+        {
+            board.ClickTile(this);
+        }
+    }
+    void OnMouseEnter()
+    {
+        if (board != null)
+        {
+            board.DragTile(this);
+        }
+    }
+    void OnMouseUp()
+    {
+        if (board != null)
+        {
+            board.ReleaseTile();
+        }
     }
 }
