@@ -26,7 +26,7 @@ public class Board : MonoBehaviour
         candyPiece = new CandyPiece[width, height];
         SetTiles();
         //SetCamera();
-        FillRandom();
+        FillBoard();
         //HighlightMatch();
     }
 
@@ -91,22 +91,59 @@ public class Board : MonoBehaviour
         return (_x >= 0 && _x < width && _y >= 0 && _y < height);
     }
 
-    void FillRandom()
+    void FillBoard()
     {
+        int max = 100;
+        int index = 0;
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                GameObject candy = Instantiate(GetRandomCandy(), Vector2.zero, Quaternion.identity);
-
-                if(candy != null)
+                CandyPiece piece = FillRandom(i, j);
+                // 3Match 맞는게 안 나올때까지 제거하고 생성
+                while(IsMatchWhenFill(i, j))
                 {
-                    candy.GetComponent<CandyPiece>().Init(this);
-                    PlaceCandy(candy.GetComponent<CandyPiece>(), i, j);
-                    candy.transform.parent = transform;
+                    ClearPiece(i, j);
+                    piece = FillRandom(i, j);
+
+                    // while loop break
+                    index++;
+                    if(index >= max)
+                    {
+                        index = 0;
+                        break;
+                    }
                 }
             }
         }
+    }
+    bool IsMatchWhenFill(int _x, int _y, int _matchLength = 3)
+    {
+        List<CandyPiece> leftMatch = FindMatch(_x, _y, new Vector2(-1, 0), _matchLength);
+        List<CandyPiece> downMatch = FindMatch(_x, _y, new Vector2(0, -1), _matchLength);
+
+        if(leftMatch == null)
+        {
+            leftMatch = new List<CandyPiece>();
+        }
+        if(downMatch == null)
+        {
+            downMatch = new List<CandyPiece>();
+        }
+        return (leftMatch.Count > 0 || downMatch.Count > 0);
+    }
+    CandyPiece FillRandom(int _x, int _y)
+    {
+        GameObject candy = Instantiate(GetRandomCandy(), Vector2.zero, Quaternion.identity);
+
+        if (candy != null)
+        {
+            candy.GetComponent<CandyPiece>().Init(this);
+            PlaceCandy(candy.GetComponent<CandyPiece>(), _x, _y);
+            candy.transform.parent = transform;
+            return candy.GetComponent<CandyPiece>();
+        }
+        return null;
     }
 
     public void ClickTile(Tile _tile)
@@ -161,8 +198,8 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(swapTime);
             ClearPiece(clickList);
             ClearPiece(targetList);
-            //HighlightMatchAt(_clickTile.xIndex, _clickTile.yIndex);
-            //HighlightMatchAt(_targetTile.xIndex, _targetTile.yIndex);
+            BreakColumn(clickList);
+            BreakColumn(targetList);
         }
 
     }
@@ -345,6 +382,60 @@ public class Board : MonoBehaviour
                 ClearPiece(i, j);
             }
         }
+    }
+    List<CandyPiece> BreakColumn(int _column, float _time = 0.1f)
+    {
+        List<CandyPiece> move = new List<CandyPiece>();
+        for (int i = 0; i < height - 1; i++)
+        {
+            // 위에 빈 공간이 존재하는가
+            if(candyPiece[_column,i] == null)
+            {
+                // 정상까지 확인
+                for (int j = i + 1; j < height; j++)
+                {
+                    if(candyPiece[_column, j] != null)
+                    {
+                        // 빈 공간으로 이동
+                        candyPiece[_column, j].Move(_column, i, _time);
+                        // 바뀐 Candy 인덱스를 다시 참조
+                        candyPiece[_column, i] = candyPiece[_column, j];
+                        candyPiece[_column, i].SetCandy(_column, i);
+
+                        if (!move.Contains(candyPiece[_column, i]))
+                        {
+                            move.Add(candyPiece[_column, i]);
+                        }
+                        candyPiece[_column, j] = null;
+                        break;
+                    }
+                }
+            }
+        }
+        return move;
+    }
+    List<CandyPiece> BreakColumn(List<CandyPiece> piece)
+    {
+        List<CandyPiece> move = new List<CandyPiece>();
+        List<int> breakColumn = GetColumn(piece);
+        foreach (int column in breakColumn)
+        {
+            move = move.Union(BreakColumn(column)).ToList();
+        }
+        return move;
+    }
+    // 영향을 받은 열만 실행 시키기
+    List<int> GetColumn(List<CandyPiece> _piece)
+    {
+        List<int> column = new List<int>();
+        foreach(CandyPiece piece in _piece)
+        {
+            if (!column.Contains(piece.xIndex))
+            {
+                column.Add(piece.xIndex);
+            }
+        }
+        return column;
     }
     void ElementDelete()
     {
