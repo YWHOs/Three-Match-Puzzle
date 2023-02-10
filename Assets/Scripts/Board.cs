@@ -21,6 +21,8 @@ public class Board : MonoBehaviour
     Tile targetTile;
     bool isInput = true;
 
+    ParticleManager particleManager;
+
     public StartTile[] startTiles;
     [System.Serializable]
     public class StartTile
@@ -38,7 +40,7 @@ public class Board : MonoBehaviour
         SetTiles();
         //SetCamera();
         FillBoard(10, 0.5f);
-        //HighlightMatch();
+        particleManager = FindObjectOfType<ParticleManager>();
     }
 
     void SetTiles()
@@ -447,14 +449,22 @@ public class Board : MonoBehaviour
             candyPiece[_x, _y] = null;
             Destroy(piece.gameObject);
         }
-        HighlightTileOff(_x, _y);
+        //HighlightTileOff(_x, _y);
     }
     void ClearPiece(List<CandyPiece> _piece)
     {
         foreach(CandyPiece piece in _piece)
         {
             if(piece != null)
+            {
                 ClearPiece(piece.xIndex, piece.yIndex);
+                // 파티클 이펙트
+                if(particleManager != null)
+                {
+                    particleManager.ClearPiece(piece.xIndex, piece.yIndex);
+                }
+            }
+
         }
     }
     void ClearBoard()
@@ -540,7 +550,7 @@ public class Board : MonoBehaviour
             yield return StartCoroutine(RefillCoroutine());
             match = FindAllMatch();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
         }
         while (match.Count != 0);
 
@@ -556,8 +566,8 @@ public class Board : MonoBehaviour
     {
         List<CandyPiece> move = new List<CandyPiece>();
         List<CandyPiece> match = new List<CandyPiece>();
-        HighlightPiece(_piece);
-        yield return new WaitForSeconds(0.5f);
+        //HighlightPiece(_piece);
+        yield return new WaitForSeconds(0.2f);
         bool isFinish = false;
         // 매칭을 하고 아래로 내려갔을 때 매칭 되는게 또 있는지 확인
         while (!isFinish)
@@ -604,8 +614,13 @@ public class Board : MonoBehaviour
     void BreakTile(int _x, int _y)
     {
         Tile tile = allTiles[_x, _y];
-        if(tile != null)
+        if(tile != null && tile.tileType == TileType.Breakable)
         {
+            // 파티클 이펙트
+            if (particleManager != null)
+            {
+                particleManager.BreakTile(tile.breakValue, _x, _y);
+            }
             tile.BreakTile();
         }
     }
