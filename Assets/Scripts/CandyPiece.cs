@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CandyPiece : MonoBehaviour
 {
-    [SerializeField] int xIndex;
-    [SerializeField] int yIndex;
+    public int xIndex;
+    public int yIndex;
 
     bool isMoving;
     Board board;

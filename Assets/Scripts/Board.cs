@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class Board : MonoBehaviour
 {
     [SerializeField] int width;
@@ -27,6 +27,7 @@ public class Board : MonoBehaviour
         SetTiles();
         //SetCamera();
         FillRandom();
+        HighlightMatch();
     }
 
     // Update is called once per frame
@@ -193,5 +194,91 @@ public class Board : MonoBehaviour
             return match;
         }
         return null;
+    }
+    List<CandyPiece> FindVertical(int _x, int _y, int _matchLength = 3)
+    {
+        // 시작 지점부터 검색해서 2개가 맞는지 검색
+        List<CandyPiece> upMatch = FindMatch(_x, _y, new Vector2(0, 1), 2);
+        List<CandyPiece> downMatch = FindMatch(_x, _y, new Vector2(0, -1), 2);
+
+        if (upMatch == null)
+        {
+            upMatch = new List<CandyPiece>();
+        }
+        if (downMatch == null)
+        {
+            downMatch = new List<CandyPiece>();
+        }
+        // 합집합은 요소를 2배로 늘리는 것을 방지
+        var combineMatch = upMatch.Union(downMatch).ToList();
+        return (combineMatch.Count >= _matchLength) ? combineMatch : null;
+        //foreach (CandyPiece piece in downMatch)
+        //{
+        //    if (!upMatch.Contains(piece))
+        //    {
+        //        upMatch.Add(piece);
+        //    }
+        //}
+        //return (upMatch.Count >= _matchLength) ? upMatch : null;
+    }
+    List<CandyPiece> FindHorizontal(int _x, int _y, int _matchLength = 3)
+    {
+        List<CandyPiece> rightMatch = FindMatch(_x, _y, new Vector2(1, 0), 2);
+        List<CandyPiece> leftMatch = FindMatch(_x, _y, new Vector2(-1, 0), 2);
+
+        if (rightMatch == null)
+        {
+            rightMatch = new List<CandyPiece>();
+        }
+        if (leftMatch == null)
+        {
+            leftMatch = new List<CandyPiece>();
+        }
+        // 합집합은 요소를 2배로 늘리는 것을 방지
+        var combineMatch = rightMatch.Union(leftMatch).ToList();
+        return (combineMatch.Count >= _matchLength) ? combineMatch : null;
+    }
+    void HighlightMatch()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                SpriteRenderer sprite = allTiles[i, j].GetComponent<SpriteRenderer>();
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+
+                List<CandyPiece> vertical = FindVertical(i, j, 3);
+                List<CandyPiece> horizontal = FindHorizontal(i, j, 3);
+
+                if(vertical == null)
+                {
+                    vertical = new List<CandyPiece>();
+                }
+                if (horizontal == null)
+                {
+                    horizontal = new List<CandyPiece>();
+                }
+
+                var combineMatch = vertical.Union(horizontal).ToList();
+                if(combineMatch.Count > 0)
+                {
+                    foreach(CandyPiece piece in combineMatch)
+                    {
+                        sprite = allTiles[piece.xIndex, piece.yIndex].GetComponent<SpriteRenderer>();
+                        sprite.color = piece.GetComponent<SpriteRenderer>().color;
+                    }
+                }
+            }
+        }
+    }
+    void ElementDelete()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+
+            }
+        }
     }
 }
