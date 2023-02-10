@@ -27,7 +27,7 @@ public class Board : MonoBehaviour
         SetTiles();
         //SetCamera();
         FillRandom();
-        HighlightMatch();
+        //HighlightMatch();
     }
 
     // Update is called once per frame
@@ -135,11 +135,36 @@ public class Board : MonoBehaviour
     }
     void SwitchTile(Tile _clickTile, Tile _targetTile)
     {
+        StartCoroutine(SwitchTilesCoroutine(_clickTile, _targetTile));
+
+    }
+    IEnumerator SwitchTilesCoroutine(Tile _clickTile, Tile _targetTile)
+    {
         CandyPiece click = candyPiece[_clickTile.xIndex, _clickTile.yIndex];
         CandyPiece target = candyPiece[_targetTile.xIndex, _targetTile.yIndex];
 
         click.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
         target.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
+
+        yield return new WaitForSeconds(swapTime);
+        List<CandyPiece> clickList = FindMatch(_clickTile.xIndex, _clickTile.yIndex);
+        List<CandyPiece> targetList = FindMatch(_targetTile.xIndex, _targetTile.yIndex);
+
+        // 색깔 맞는게 없으면 다시 원 상태로 복구
+        if(clickList.Count == 0 && targetList.Count == 0)
+        {
+            click.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
+            target.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
+        }
+        else
+        {
+            yield return new WaitForSeconds(swapTime);
+            ClearPiece(clickList);
+            ClearPiece(targetList);
+            //HighlightMatchAt(_clickTile.xIndex, _clickTile.yIndex);
+            //HighlightMatchAt(_targetTile.xIndex, _targetTile.yIndex);
+        }
+
     }
     bool IsCloseTile(Tile _start, Tile _end)
     {
@@ -183,11 +208,16 @@ public class Board : MonoBehaviour
             }
             CandyPiece next = candyPiece[nextX, nextY];
 
-            if(next.matchValue == start.matchValue && !match.Contains(next))
+            if(next == null) { break; }
+            else
             {
-                match.Add(next);
+                if (next.matchValue == start.matchValue && !match.Contains(next))
+                {
+                    match.Add(next);
+                }
+                else { break; }
             }
-            else { break; }
+
         }
         if(match.Count >= _matchLength)
         {
@@ -244,30 +274,75 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                SpriteRenderer sprite = allTiles[i, j].GetComponent<SpriteRenderer>();
-                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+                HighlightMatchAt(i, j);
+            }
+        }
+    }
 
-                List<CandyPiece> vertical = FindVertical(i, j, 3);
-                List<CandyPiece> horizontal = FindHorizontal(i, j, 3);
+    private void HighlightMatchAt(int _x, int _y)
+    {
+        HighlightTileOff(_x, _y);
+        var combineMatch = FindMatch(_x, _y);
+        if (combineMatch.Count > 0)
+        {
+            foreach (CandyPiece piece in combineMatch)
+            {
+                HighlightTileOn(piece.xIndex, piece.yIndex, piece.GetComponent<SpriteRenderer>().color);
+            }
+        }
+    }
 
-                if(vertical == null)
-                {
-                    vertical = new List<CandyPiece>();
-                }
-                if (horizontal == null)
-                {
-                    horizontal = new List<CandyPiece>();
-                }
+    void HighlightTileOff(int _x, int _y)
+    {
+        SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
+        sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+    }
+    void HighlightTileOn(int _x, int _y, Color _color)
+    {
+        SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
+        sprite.color = _color;
+    }
+    List<CandyPiece> FindMatch(int _x, int _y, int _matchLength = 3)
+    {
+        List<CandyPiece> vertical = FindVertical(_x, _y, _matchLength);
+        List<CandyPiece> horizontal = FindHorizontal(_x, _y, _matchLength);
 
-                var combineMatch = vertical.Union(horizontal).ToList();
-                if(combineMatch.Count > 0)
-                {
-                    foreach(CandyPiece piece in combineMatch)
-                    {
-                        sprite = allTiles[piece.xIndex, piece.yIndex].GetComponent<SpriteRenderer>();
-                        sprite.color = piece.GetComponent<SpriteRenderer>().color;
-                    }
-                }
+        if (vertical == null)
+        {
+            vertical = new List<CandyPiece>();
+        }
+        if (horizontal == null)
+        {
+            horizontal = new List<CandyPiece>();
+        }
+
+        var combineMatch = vertical.Union(horizontal).ToList();
+        return combineMatch;
+    }
+    void ClearPiece(int _x, int _y)
+    {
+        CandyPiece piece = candyPiece[_x, _y];
+        if(piece != null)
+        {
+            candyPiece[_x, _y] = null;
+            Destroy(piece.gameObject);
+        }
+        HighlightTileOff(_x, _y);
+    }
+    void ClearPiece(List<CandyPiece> _piece)
+    {
+        foreach(CandyPiece piece in _piece)
+        {
+            ClearPiece(piece.xIndex, piece.yIndex);
+        }
+    }
+    void ClearBoard()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                ClearPiece(i, j);
             }
         }
     }
