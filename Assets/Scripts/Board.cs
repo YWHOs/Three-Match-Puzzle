@@ -9,6 +9,7 @@ public class Board : MonoBehaviour
     [SerializeField] int borderSize;
 
     [SerializeField] GameObject tilePrefab;
+    [SerializeField] GameObject tileObstaclePrefab;
     [SerializeField] GameObject[] candyPrefabs;
 
     [SerializeField] float swapTime = 0.3f;
@@ -20,7 +21,14 @@ public class Board : MonoBehaviour
     Tile targetTile;
     bool isInput = true;
 
-
+    public StartTile[] startTiles;
+    [System.Serializable]
+    public class StartTile
+    {
+        public GameObject tilePrefab;
+        public int x;
+        public int y;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -35,20 +43,39 @@ public class Board : MonoBehaviour
 
     void SetTiles()
     {
+        //obstacle
+        foreach (StartTile tile in startTiles)
+        {
+            if (tile != null)
+            {
+                CreateTile(tile.tilePrefab, tile.x, tile.y);
+            }
+        }
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                // Create Tiles
-                GameObject tile = Instantiate(tilePrefab, new Vector2(i, j), Quaternion.identity);
-                tile.name = $"Tile({i},{j})";
-                allTiles[i, j] = tile.GetComponent<Tile>();
-                tile.transform.parent = transform;
-
-                // 타일 x,y값 가져오기
-                allTiles[i, j].Init(i, j, this);
+                if(allTiles[i, j] == null)
+                    CreateTile(tilePrefab, i, j);
             }
         }
+    }
+
+    private void CreateTile(GameObject _prefab, int _x, int _y)
+    {
+        // Create Tiles
+        if(_prefab != null)
+        {
+            GameObject tile = Instantiate(_prefab, new Vector2(_x, _y), Quaternion.identity);
+            tile.name = $"Tile({_x},{_y})";
+            allTiles[_x, _y] = tile.GetComponent<Tile>();
+            tile.transform.parent = transform;
+
+            // 타일 x,y값 가져오기
+            allTiles[_x, _y].Init(_x, _y, this);
+        }
+
     }
 
     void SetCamera()
@@ -96,7 +123,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if(candyPiece[i, j] == null)
+                if(candyPiece[i, j] == null && allTiles[i, j].tileType != TileType.Obstacle)
                 {
                     CandyPiece piece = FillRandom(i, j, _yOffset, _time);
                     index = 0;
@@ -380,13 +407,20 @@ public class Board : MonoBehaviour
 
     void HighlightTileOff(int _x, int _y)
     {
-        SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
-        sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+        if(allTiles[_x, _y].tileType != TileType.Breakable)
+        {
+            SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+        }
+
     }
     void HighlightTileOn(int _x, int _y, Color _color)
     {
-        SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
-        sprite.color = _color;
+        if (allTiles[_x, _y].tileType != TileType.Breakable)
+        {
+            SpriteRenderer sprite = allTiles[_x, _y].GetComponent<SpriteRenderer>();
+            sprite.color = _color;
+        }
     }
     List<CandyPiece> FindMatch(int _x, int _y, int _matchLength = 3)
     {
@@ -439,7 +473,7 @@ public class Board : MonoBehaviour
         for (int i = 0; i < height - 1; i++)
         {
             // 위에 빈 공간이 존재하는가
-            if(candyPiece[_column,i] == null)
+            if(candyPiece[_column,i] == null && allTiles[_column, i].tileType != TileType.Obstacle)
             {
                 // 정상까지 확인
                 for (int j = i + 1; j < height; j++)
@@ -529,6 +563,8 @@ public class Board : MonoBehaviour
         while (!isFinish)
         {
             ClearPiece(_piece);
+            //Break Tile
+            BreakTile(_piece);
             yield return new WaitForSeconds(0.2f);
             move = BreakColumn(_piece);
             // 캔디가 아직 움직이는가?
@@ -564,6 +600,24 @@ public class Board : MonoBehaviour
             }
         }
         return true;
+    }
+    void BreakTile(int _x, int _y)
+    {
+        Tile tile = allTiles[_x, _y];
+        if(tile != null)
+        {
+            tile.BreakTile();
+        }
+    }
+    void BreakTile(List<CandyPiece> _piece)
+    {
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                BreakTile(piece.xIndex, piece.yIndex);
+            }
+        }
     }
     void ElementDelete()
     {
