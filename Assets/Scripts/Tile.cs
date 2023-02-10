@@ -2,11 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TileType
-{
-    Normal,
-    Obstacle
-}
 public class Tile : MonoBehaviour
 {
     public int xIndex;
@@ -14,7 +9,6 @@ public class Tile : MonoBehaviour
 
     Board board;
 
-    public TileType tileType = TileType.Normal;
     // Start is called before the first frame update
     void Start()
     {

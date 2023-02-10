@@ -9,7 +9,6 @@ public class Board : MonoBehaviour
     [SerializeField] int borderSize;
 
     [SerializeField] GameObject tilePrefab;
-    [SerializeField] GameObject tileObstaclePrefab;
     [SerializeField] GameObject[] candyPrefabs;
 
     [SerializeField] float swapTime = 0.3f;
@@ -21,14 +20,7 @@ public class Board : MonoBehaviour
     Tile targetTile;
     bool isInput = true;
 
-    public StartTile[] startTiles;
-    [System.Serializable]
-    public class StartTile
-    {
-        public GameObject tilePrefab;
-        public int x;
-        public int y;
-    }
+
     // Start is called before the first frame update
     void Start()
     {
