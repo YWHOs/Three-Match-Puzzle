@@ -15,7 +15,7 @@ public class CandyPiece : MonoBehaviour
         Linear,
         EaseOut,
         EaseIn
-    };
+    }
     public MatchValue matchValue;
     public enum MatchValue
     {
@@ -24,7 +24,7 @@ public class CandyPiece : MonoBehaviour
         Orange,
         Purple,
         Red
-    };
+    }
     // Start is called before the first frame update
     void Start()
     {

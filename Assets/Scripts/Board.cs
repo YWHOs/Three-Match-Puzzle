@@ -9,6 +9,7 @@ public class Board : MonoBehaviour
     [SerializeField] int borderSize;
 
     [SerializeField] GameObject tilePrefab;
+    [SerializeField] GameObject tileObstaclePrefab;
     [SerializeField] GameObject[] candyPrefabs;
 
     [SerializeField] float swapTime = 0.3f;
@@ -18,6 +19,16 @@ public class Board : MonoBehaviour
 
     Tile clickTile;
     Tile targetTile;
+    bool isInput = true;
+
+    public StartTile[] startTiles;
+    [System.Serializable]
+    public class StartTile
+    {
+        public GameObject tilePrefab;
+        public int x;
+        public int y;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -26,14 +37,8 @@ public class Board : MonoBehaviour
         candyPiece = new CandyPiece[width, height];
         SetTiles();
         //SetCamera();
-        FillBoard();
+        FillBoard(10, 0.5f);
         //HighlightMatch();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void SetTiles()
@@ -91,7 +96,7 @@ public class Board : MonoBehaviour
         return (_x >= 0 && _x < width && _y >= 0 && _y < height);
     }
 
-    void FillBoard()
+    void FillBoard(int _yOffset = 0, float _time = 0.1f)
     {
         int max = 100;
         int index = 0;
@@ -99,21 +104,25 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                CandyPiece piece = FillRandom(i, j);
-                // 3Match 맞는게 안 나올때까지 제거하고 생성
-                while(IsMatchWhenFill(i, j))
+                if(candyPiece[i, j] == null)
                 {
-                    ClearPiece(i, j);
-                    piece = FillRandom(i, j);
-
-                    // while loop break
-                    index++;
-                    if(index >= max)
+                    CandyPiece piece = FillRandom(i, j, _yOffset, _time);
+                    index = 0;
+                    // 3Match 맞는게 안 나올때까지 제거하고 생성
+                    while (IsMatchWhenFill(i, j))
                     {
-                        index = 0;
-                        break;
+                        ClearPiece(i, j);
+                        piece = FillRandom(i, j, _yOffset, _time);
+
+                        // while loop break
+                        index++;
+                        if (index >= max)
+                        {
+                            break;
+                        }
                     }
                 }
+
             }
         }
     }
@@ -132,7 +141,7 @@ public class Board : MonoBehaviour
         }
         return (leftMatch.Count > 0 || downMatch.Count > 0);
     }
-    CandyPiece FillRandom(int _x, int _y)
+    CandyPiece FillRandom(int _x, int _y, int _yOffset = 0, float _time = 0.1f)
     {
         GameObject candy = Instantiate(GetRandomCandy(), Vector2.zero, Quaternion.identity);
 
@@ -140,6 +149,14 @@ public class Board : MonoBehaviour
         {
             candy.GetComponent<CandyPiece>().Init(this);
             PlaceCandy(candy.GetComponent<CandyPiece>(), _x, _y);
+
+            // 위에서 캔디 생성
+            if(_yOffset != 0)
+            {
+                candy.transform.position = new Vector2(_x, _y + _yOffset);
+                candy.GetComponent<CandyPiece>().Move(_x, _y, _time);
+            }
+
             candy.transform.parent = transform;
             return candy.GetComponent<CandyPiece>();
         }
@@ -177,29 +194,37 @@ public class Board : MonoBehaviour
     }
     IEnumerator SwitchTilesCoroutine(Tile _clickTile, Tile _targetTile)
     {
-        CandyPiece click = candyPiece[_clickTile.xIndex, _clickTile.yIndex];
-        CandyPiece target = candyPiece[_targetTile.xIndex, _targetTile.yIndex];
-
-        click.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
-        target.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
-
-        yield return new WaitForSeconds(swapTime);
-        List<CandyPiece> clickList = FindMatch(_clickTile.xIndex, _clickTile.yIndex);
-        List<CandyPiece> targetList = FindMatch(_targetTile.xIndex, _targetTile.yIndex);
-
-        // 색깔 맞는게 없으면 다시 원 상태로 복구
-        if(clickList.Count == 0 && targetList.Count == 0)
+        if (isInput)
         {
-            click.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
-            target.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
-        }
-        else
-        {
-            yield return new WaitForSeconds(swapTime);
-            ClearPiece(clickList);
-            ClearPiece(targetList);
-            BreakColumn(clickList);
-            BreakColumn(targetList);
+            CandyPiece click = candyPiece[_clickTile.xIndex, _clickTile.yIndex];
+            CandyPiece target = candyPiece[_targetTile.xIndex, _targetTile.yIndex];
+
+            if (click != null && target != null)
+            {
+                click.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
+                target.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
+
+                yield return new WaitForSeconds(swapTime);
+                List<CandyPiece> clickList = FindMatch(_clickTile.xIndex, _clickTile.yIndex);
+                List<CandyPiece> targetList = FindMatch(_targetTile.xIndex, _targetTile.yIndex);
+
+                // 색깔 맞는게 없으면 다시 원 상태로 복구
+                if (clickList.Count == 0 && targetList.Count == 0)
+                {
+                    click.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
+                    target.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(swapTime);
+                    ClearAndRefill(clickList.Union(targetList).ToList());
+                    //ClearPiece(clickList);
+                    //ClearPiece(targetList);
+
+                    //BreakColumn(clickList);
+                    //BreakColumn(targetList);
+                }
+            }
         }
 
     }
@@ -262,6 +287,28 @@ public class Board : MonoBehaviour
         }
         return null;
     }
+    List<CandyPiece> FindMatch(List<CandyPiece> _piece, int _matchLength = 3)
+    {
+        List<CandyPiece> match = new List<CandyPiece>();
+        foreach(CandyPiece piece in _piece)
+        {
+            match = match.Union(FindMatch(piece.xIndex, piece.yIndex, _matchLength)).ToList();
+        }
+        return match;
+    }
+    List<CandyPiece> FindAllMatch()
+    {
+        List<CandyPiece> combineMatch = new List<CandyPiece>();
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                List<CandyPiece> match = FindMatch(i, j);
+                combineMatch = combineMatch.Union(match).ToList();
+            }
+        }
+        return combineMatch;
+    }
     List<CandyPiece> FindVertical(int _x, int _y, int _matchLength = 3)
     {
         // 시작 지점부터 검색해서 2개가 맞는지 검색
@@ -304,6 +351,16 @@ public class Board : MonoBehaviour
         // 합집합은 요소를 2배로 늘리는 것을 방지
         var combineMatch = rightMatch.Union(leftMatch).ToList();
         return (combineMatch.Count >= _matchLength) ? combineMatch : null;
+    }
+    void HighlightPiece(List<CandyPiece> _piece)
+    {
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                HighlightTileOn(piece.xIndex, piece.yIndex, piece.GetComponent<SpriteRenderer>().color);
+            }
+        }
     }
     void HighlightMatch()
     {
@@ -370,7 +427,8 @@ public class Board : MonoBehaviour
     {
         foreach(CandyPiece piece in _piece)
         {
-            ClearPiece(piece.xIndex, piece.yIndex);
+            if(piece != null)
+                ClearPiece(piece.xIndex, piece.yIndex);
         }
     }
     void ClearBoard()
@@ -397,7 +455,7 @@ public class Board : MonoBehaviour
                     if(candyPiece[_column, j] != null)
                     {
                         // 빈 공간으로 이동
-                        candyPiece[_column, j].Move(_column, i, _time);
+                        candyPiece[_column, j].Move(_column, i, _time * (j - 1));
                         // 바뀐 Candy 인덱스를 다시 참조
                         candyPiece[_column, i] = candyPiece[_column, j];
                         candyPiece[_column, i].SetCandy(_column, i);
@@ -436,6 +494,84 @@ public class Board : MonoBehaviour
             }
         }
         return column;
+    }
+    void ClearAndRefill(List<CandyPiece> _piece)
+    {
+        StartCoroutine(ClearAndRefillCoroutine(_piece));
+    }
+    IEnumerator ClearAndRefillCoroutine(List<CandyPiece> _piece)
+    {
+        isInput = false;
+        List<CandyPiece> match = _piece;
+         
+        // 일치하는 항목을 찾지 못할 때까지 반복
+        do
+        {
+            yield return StartCoroutine(ClearAndBreakCoroutine(match));
+            yield return null;
+
+            //리필
+            yield return StartCoroutine(RefillCoroutine());
+            match = FindAllMatch();
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        while (match.Count != 0);
+
+        isInput = true;
+
+    }
+    IEnumerator RefillCoroutine()
+    {
+        FillBoard(10, 0.5f);
+        yield return null;
+    }
+    IEnumerator ClearAndBreakCoroutine(List<CandyPiece> _piece)
+    {
+        List<CandyPiece> move = new List<CandyPiece>();
+        List<CandyPiece> match = new List<CandyPiece>();
+        HighlightPiece(_piece);
+        yield return new WaitForSeconds(0.5f);
+        bool isFinish = false;
+        // 매칭을 하고 아래로 내려갔을 때 매칭 되는게 또 있는지 확인
+        while (!isFinish)
+        {
+            ClearPiece(_piece);
+            yield return new WaitForSeconds(0.2f);
+            move = BreakColumn(_piece);
+            // 캔디가 아직 움직이는가?
+            while (!IsBreak(move))
+            {
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.2f);
+            match = FindMatch(move);
+            if(match.Count == 0)
+            {
+                isFinish = true;
+                break;
+            }
+            else
+            {
+                yield return StartCoroutine(ClearAndBreakCoroutine(match));
+            }
+        }
+        yield return null;
+    }
+    bool IsBreak(List<CandyPiece> _piece)
+    {
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                if(piece.transform.position.y - piece.yIndex > 0.001f)
+                {
+                    // 캔디가 아직도 움직이고 있으면 false
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     void ElementDelete()
     {

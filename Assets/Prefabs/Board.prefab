@@ -47,6 +47,7 @@ MonoBehaviour:
   height: 9
   borderSize: 2
   tilePrefab: {fileID: 8814164979061552410, guid: 583d72d8c4ced4c45aecb4bdfbe5ec4c, type: 3}
+  tileObstaclePrefab: {fileID: 8814164979061552410, guid: 9ce2f2efd10c746408d0623a2690a197, type: 3}
   candyPrefabs:
   - {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
   - {fileID: 7333313044215135173, guid: 3fa9d71fff08b91458f8bcc3693fa441, type: 3}
@@ -54,3 +55,4 @@ MonoBehaviour:
   - {fileID: 1760945940106718012, guid: e99e67da8086e6c4594d77494eb94048, type: 3}
   - {fileID: 6902664914990261122, guid: 5d57a9e9b06542343b64f577a1544b2e, type: 3}
   swapTime: 0.3
+  startTiles: []
