@@ -630,6 +630,10 @@ public class Board : MonoBehaviour
             List<CandyPiece> bombPiece = GetBombPiece(_piece);
             _piece = _piece.Union(bombPiece).ToList();
 
+            // Bomb가 보드에 여러개 있을 때 모든 Bomb 작동
+            bombPiece = GetBombPiece(_piece);
+            _piece = _piece.Union(bombPiece).ToList();
+
             ClearPiece(_piece);
             BreakTile(_piece);
             // 보드에 Bomb 추가
