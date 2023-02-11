@@ -592,8 +592,11 @@ public class Board : MonoBehaviour
         // 매칭을 하고 아래로 내려갔을 때 매칭 되는게 또 있는지 확인
         while (!isFinish)
         {
+            // Bomb
+            List<CandyPiece> bombPiece = GetBombPiece(_piece);
+            _piece = _piece.Union(bombPiece).ToList();
+
             ClearPiece(_piece);
-            //Break Tile
             BreakTile(_piece);
             yield return new WaitForSeconds(0.2f);
             move = BreakColumn(_piece);
@@ -653,6 +656,79 @@ public class Board : MonoBehaviour
                 BreakTile(piece.xIndex, piece.yIndex);
             }
         }
+    }
+
+    // Bomb Type Candy //
+    List<CandyPiece> GetRowPiece(int _row)
+    {
+        List<CandyPiece> piece = new List<CandyPiece>();
+        for (int i = 0; i < width; i++)
+        {
+            if(candyPiece[i, _row] != null)
+            {
+                piece.Add(candyPiece[i, _row]);
+            }
+        }
+        return piece;
+    }
+    List<CandyPiece> GetColumnPiece(int _column)
+    {
+        List<CandyPiece> piece = new List<CandyPiece>();
+        for (int i = 0; i < height; i++)
+        {
+            if (candyPiece[_column, i] != null)
+            {
+                piece.Add(candyPiece[_column, i]);
+            }
+        }
+        return piece;
+    }
+    List<CandyPiece> GetNearPiece(int _x, int _y, int _offset = 1)
+    {
+        // 인접 캔디 가져오기 (Bomb Type)
+        List<CandyPiece> piece = new List<CandyPiece>();
+        for (int i = _x - _offset; i <= _x + _offset; i++)
+        {
+            for (int j = _y - _offset; j <= _y + _offset; j++)
+            {
+                if(IsBound(i, j))
+                {
+                    piece.Add(candyPiece[i, j]);
+                }
+            }
+        }
+        return piece;
+    }
+    List<CandyPiece> GetBombPiece(List<CandyPiece> _piece)
+    {
+        List<CandyPiece> allPiece = new List<CandyPiece>();
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                List<CandyPiece> clearPiece = new List<CandyPiece>();
+                BombCandy bombCandy = piece.GetComponent<BombCandy>();
+                if(bombCandy != null)
+                {
+                    switch (bombCandy.bombType)
+                    {
+                        case BombType.Column:
+                            clearPiece = GetColumnPiece(bombCandy.xIndex);
+                            break;
+                        case BombType.Row:
+                            clearPiece = GetRowPiece(bombCandy.yIndex);
+                            break;
+                        case BombType.Near:
+                            clearPiece = GetNearPiece(bombCandy.xIndex, bombCandy.yIndex);
+                            break;
+                        case BombType.Color:
+                            break;
+                    }
+                    allPiece = allPiece.Union(clearPiece).ToList();
+                }
+            }
+        }
+        return allPiece;
     }
     void ElementDelete()
     {

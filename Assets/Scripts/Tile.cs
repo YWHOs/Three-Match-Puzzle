@@ -26,11 +26,6 @@ public class Tile : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     public void Init(int _xIndex, int _yIndex, Board _board)
     {
