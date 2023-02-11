@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 public class Board : MonoBehaviour
 {
+    [Header("Board Size")]
     [SerializeField] int width;
     [SerializeField] int height;
     [SerializeField] int borderSize;
@@ -11,6 +12,13 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject tilePrefab;
     [SerializeField] GameObject tileObstaclePrefab;
     [SerializeField] GameObject[] candyPrefabs;
+
+    [Header("Bomb")]
+    [SerializeField] GameObject rowBombPrefab;
+    [SerializeField] GameObject columnBombPrefab;
+    [SerializeField] GameObject nearBombPrefab;
+    GameObject clickBomb;
+    GameObject targetBomb;
 
     [SerializeField] float swapTime = 0.3f;
 
@@ -204,6 +212,18 @@ public class Board : MonoBehaviour
             _prefab.transform.parent = transform;
         }
     }
+    GameObject MakeBomb(GameObject _prefab, int _x, int _y)
+    {
+        if(_prefab != null && IsBound(_x, _y))
+        {
+            GameObject bomb = Instantiate(_prefab, new Vector2(_x, _y), Quaternion.identity);
+            bomb.GetComponent<BombCandy>().Init(this);
+            bomb.GetComponent<BombCandy>().SetCandy(_x, _y);
+            bomb.transform.parent = transform;
+            return bomb;
+        }
+        return null;
+    }
     public void ClickTile(Tile _tile)
     {
         if(clickTile == null)
@@ -258,6 +278,11 @@ public class Board : MonoBehaviour
                 else
                 {
                     yield return new WaitForSeconds(swapTime);
+                    //Bomb
+                    Vector2 swap = new Vector2(_targetTile.xIndex - _clickTile.xIndex, _targetTile.yIndex - _clickTile.yIndex);
+                    clickBomb = DropBomb(_clickTile.xIndex, _clickTile.yIndex, swap, clickList);
+                    targetBomb = DropBomb(_targetTile.xIndex, _targetTile.yIndex, swap, targetList);
+
                     ClearAndRefill(clickList.Union(targetList).ToList());
                     //ClearPiece(clickList);
                     //ClearPiece(targetList);
@@ -598,6 +623,17 @@ public class Board : MonoBehaviour
 
             ClearPiece(_piece);
             BreakTile(_piece);
+            // 보드에 Bomb 추가
+            if(clickBomb != null)
+            {
+                NoRefillWhenBomb(clickBomb);
+                clickBomb = null;
+            }
+            if(targetBomb != null)
+            {
+                NoRefillWhenBomb(targetBomb);
+                targetBomb = null;
+            }
             yield return new WaitForSeconds(0.2f);
             move = BreakColumn(_piece);
             // 캔디가 아직 움직이는가?
@@ -729,6 +765,72 @@ public class Board : MonoBehaviour
             }
         }
         return allPiece;
+    }
+    bool IsCorner(List<CandyPiece> _piece)
+    {
+        // true 면 인접 폭탄
+        bool vertical = false;
+        bool horizontal = false;
+        int x = -1;
+        int y = -1;
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                if(x == -1 || y == -1)
+                {
+                    x = piece.xIndex;
+                    y = piece.yIndex;
+                    continue;
+                }
+            }
+            if(piece.xIndex != x && piece.yIndex == y)
+            {
+                horizontal = true;
+            }
+            if(piece.xIndex == x && piece.yIndex != y)
+            {
+                vertical = true;
+            }
+        }
+        return (horizontal && vertical);
+    }
+    GameObject DropBomb (int _x, int _y, Vector2 _swap, List<CandyPiece> _piece)
+    {
+        GameObject bomb = null;
+        // 4개의 게임조각 이상이어야 bomb 생성
+        if(_piece.Count >= 4)
+        {
+            if (IsCorner(_piece))
+            {
+                if(nearBombPrefab != null)
+                {
+                    bomb = MakeBomb(nearBombPrefab, _x, _y);
+                }
+            }
+            else
+            {
+                if(_swap.x != 0)
+                {
+                    bomb = MakeBomb(rowBombPrefab, _x, _y);
+                }
+                else
+                {
+                    bomb = MakeBomb(columnBombPrefab, _x, _y);
+                }
+            }
+        }
+        return bomb;
+    }
+    void NoRefillWhenBomb(GameObject _bomb)
+    {
+        int x = (int)_bomb.transform.position.x;
+        int y = (int)_bomb.transform.position.y;
+
+        if(IsBound(x, y))
+        {
+            candyPiece[x, y] = _bomb.GetComponent<CandyPiece>();
+        }
     }
     void ElementDelete()
     {
