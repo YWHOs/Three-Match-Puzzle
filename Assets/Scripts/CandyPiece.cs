@@ -15,6 +15,7 @@ public class CandyPiece : MonoBehaviour
 {
     public int xIndex;
     public int yIndex;
+    [SerializeField] int score = 100;
 
     bool isMoving;
     Board board;
@@ -98,6 +99,13 @@ public class CandyPiece : MonoBehaviour
             }
 
             matchValue = _piece.matchValue;
+        }
+    }
+    public void Score()
+    {
+        if(ScoreManager.instance != null)
+        {
+            ScoreManager.instance.AddScore(score);
         }
     }
 }

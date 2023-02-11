@@ -547,6 +547,8 @@ public class Board : MonoBehaviour
             if(piece != null)
             {
                 ClearPiece(piece.xIndex, piece.yIndex);
+                // Score
+                piece.Score();
                 // 파티클 이펙트
                 if(particleManager != null)
                 {
