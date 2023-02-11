@@ -282,7 +282,16 @@ public class Board : MonoBehaviour
                     Vector2 swap = new Vector2(_targetTile.xIndex - _clickTile.xIndex, _targetTile.yIndex - _clickTile.yIndex);
                     clickBomb = DropBomb(_clickTile.xIndex, _clickTile.yIndex, swap, clickList);
                     targetBomb = DropBomb(_targetTile.xIndex, _targetTile.yIndex, swap, targetList);
-
+                    if(clickBomb != null && target != null)
+                    {
+                        CandyPiece bombPiece = clickBomb.GetComponent<CandyPiece>();
+                        bombPiece.ChangeColor(target);
+                    }
+                    if(targetBomb != null && click != null)
+                    {
+                        CandyPiece bombPiece = targetBomb.GetComponent<CandyPiece>();
+                        bombPiece.ChangeColor(click);
+                    }
                     ClearAndRefill(clickList.Union(targetList).ToList());
                     //ClearPiece(clickList);
                     //ClearPiece(targetList);

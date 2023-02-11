@@ -81,4 +81,21 @@ public class CandyPiece : MonoBehaviour
         }
         isMoving = false;
     }
+
+    public void ChangeColor(CandyPiece _piece)
+    {
+        SpriteRenderer spriteChange = GetComponent<SpriteRenderer>();
+        Color color = Color.clear;
+        if(_piece != null)
+        {
+            SpriteRenderer spriteMatch = _piece.GetComponent<SpriteRenderer>();
+
+            if(spriteMatch != null && spriteChange != null)
+            {
+                spriteChange.color = spriteMatch.color;
+            }
+
+            matchValue = _piece.matchValue;
+        }
+    }
 }
