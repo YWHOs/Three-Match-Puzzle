@@ -17,6 +17,7 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject rowBombPrefab;
     [SerializeField] GameObject columnBombPrefab;
     [SerializeField] GameObject nearBombPrefab;
+    [SerializeField] GameObject colorBombPrefab;
     GameObject clickBomb;
     GameObject targetBomb;
 
@@ -268,9 +269,31 @@ public class Board : MonoBehaviour
                 yield return new WaitForSeconds(swapTime);
                 List<CandyPiece> clickList = FindMatch(_clickTile.xIndex, _clickTile.yIndex);
                 List<CandyPiece> targetList = FindMatch(_targetTile.xIndex, _targetTile.yIndex);
+                //Color Bomb
+                List<CandyPiece> colorMatch = new List<CandyPiece>();
+                if(IsColorBomb(click) && !IsColorBomb(target))
+                {
+                    click.matchValue = target.matchValue;
+                    colorMatch = FindAllMatchValue(click.matchValue);
+                }
+                else if(!IsColorBomb(click) && IsColorBomb(target))
+                {
+                    target.matchValue = click.matchValue;
+                    colorMatch = FindAllMatchValue(target.matchValue);
+                }
+                else if (IsColorBomb(click) && IsColorBomb(target))
+                {
+                    foreach(CandyPiece piece in candyPiece)
+                    {
+                        if (!colorMatch.Contains(piece))
+                        {
+                            colorMatch.Add(piece);
+                        }
+                    }
+                }
 
                 // 색깔 맞는게 없으면 다시 원 상태로 복구
-                if (clickList.Count == 0 && targetList.Count == 0)
+                if (clickList.Count == 0 && targetList.Count == 0 && colorMatch.Count == 0)
                 {
                     click.Move(_clickTile.xIndex, _clickTile.yIndex, swapTime);
                     target.Move(_targetTile.xIndex, _targetTile.yIndex, swapTime);
@@ -285,14 +308,16 @@ public class Board : MonoBehaviour
                     if(clickBomb != null && target != null)
                     {
                         CandyPiece bombPiece = clickBomb.GetComponent<CandyPiece>();
-                        bombPiece.ChangeColor(target);
+                        if(!IsColorBomb(bombPiece))
+                            bombPiece.ChangeColor(target);
                     }
                     if(targetBomb != null && click != null)
                     {
                         CandyPiece bombPiece = targetBomb.GetComponent<CandyPiece>();
-                        bombPiece.ChangeColor(click);
+                        if (!IsColorBomb(bombPiece))
+                            bombPiece.ChangeColor(click);
                     }
-                    ClearAndRefill(clickList.Union(targetList).ToList());
+                    ClearAndRefill(clickList.Union(targetList).ToList().Union(colorMatch).ToList());
                     //ClearPiece(clickList);
                     //ClearPiece(targetList);
 
@@ -823,14 +848,22 @@ public class Board : MonoBehaviour
             }
             else
             {
-                if(_swap.x != 0)
+                if(_piece.Count >= 5)
                 {
-                    bomb = MakeBomb(rowBombPrefab, _x, _y);
+                    bomb = MakeBomb(colorBombPrefab, _x, _y);
                 }
                 else
                 {
-                    bomb = MakeBomb(columnBombPrefab, _x, _y);
+                    if (_swap.x != 0)
+                    {
+                        bomb = MakeBomb(rowBombPrefab, _x, _y);
+                    }
+                    else
+                    {
+                        bomb = MakeBomb(columnBombPrefab, _x, _y);
+                    }
                 }
+
             }
         }
         return bomb;
@@ -844,6 +877,35 @@ public class Board : MonoBehaviour
         {
             candyPiece[x, y] = _bomb.GetComponent<CandyPiece>();
         }
+    }
+    List<CandyPiece> FindAllMatchValue(MatchValue _value)
+    {
+        // Color Bomb
+        List<CandyPiece> piece = new List<CandyPiece>();
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if(candyPiece[i, j] != null)
+                {
+                    if(candyPiece[i, j].matchValue == _value)
+                    {
+                        piece.Add(candyPiece[i, j]);
+                    }
+                }
+            }
+        }
+        return piece;
+    }
+    bool IsColorBomb(CandyPiece _piece)
+    {
+        BombCandy bomb = _piece.GetComponent<BombCandy>();
+
+        if(bomb != null)
+        {
+            return (bomb.bombType == BombType.Color);
+        }
+        return false;
     }
     void ElementDelete()
     {

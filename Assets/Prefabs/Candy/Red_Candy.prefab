@@ -98,5 +98,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xIndex: 0
   yIndex: 0
-  interpolation: 1
+  interpolation: 0
   matchValue: 4

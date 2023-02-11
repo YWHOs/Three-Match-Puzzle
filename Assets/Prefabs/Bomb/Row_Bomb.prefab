@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xIndex: 0
   yIndex: 0
-  interpolation: 1
+  interpolation: 0
   matchValue: 4
   bombType: 2
 --- !u!1 &1668693915240707531

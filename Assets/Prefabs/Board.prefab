@@ -57,6 +57,7 @@ MonoBehaviour:
   rowBombPrefab: {fileID: 1668693913785521425, guid: d11631fbe1fb6bf4ebf63415186e3669, type: 3}
   columnBombPrefab: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
   nearBombPrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+  colorBombPrefab: {fileID: 1668693913785521425, guid: 2edabbec34e7c0e4a9bc6ea4b69fbdad, type: 3}
   swapTime: 0.3
   yOffset: 10
   moveTime: 0.5
@@ -74,12 +75,18 @@ MonoBehaviour:
     x: 3
     y: 3
   startCandyPiece:
-  - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
-    x: 0
-    y: 0
-  - tilePrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
-    x: 0
-    y: 1
-  - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+  - tilePrefab: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
     x: 1
     y: 1
+  - tilePrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+    x: 1
+    y: 5
+  - tilePrefab: {fileID: 6902664914990261122, guid: 5d57a9e9b06542343b64f577a1544b2e, type: 3}
+    x: 1
+    y: 3
+  - tilePrefab: {fileID: 6902664914990261122, guid: 5d57a9e9b06542343b64f577a1544b2e, type: 3}
+    x: 2
+    y: 2
+  - tilePrefab: {fileID: 6902664914990261122, guid: 5d57a9e9b06542343b64f577a1544b2e, type: 3}
+    x: 2
+    y: 3

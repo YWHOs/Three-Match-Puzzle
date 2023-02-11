@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MatchValue
+{
+    Blue,
+    Green,
+    Orange,
+    Purple,
+    Red
+}
 public class CandyPiece : MonoBehaviour
 {
     public int xIndex;
@@ -17,14 +25,7 @@ public class CandyPiece : MonoBehaviour
         EaseIn
     }
     public MatchValue matchValue;
-    public enum MatchValue
-    {
-        Blue,
-        Green,
-        Orange,
-        Purple,
-        Red
-    }
+
     public void Init(Board _board)
     {
         board = _board;
