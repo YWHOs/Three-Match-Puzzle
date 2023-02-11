@@ -22,8 +22,11 @@ public class Board : MonoBehaviour
     bool isInput = true;
 
     ParticleManager particleManager;
+    [SerializeField] int yOffset = 10;
+    [SerializeField] float moveTime = 0.5f;
 
     public StartTile[] startTiles;
+    [SerializeField] StartTile[] startCandyPiece;
     [System.Serializable]
     public class StartTile
     {
@@ -38,8 +41,9 @@ public class Board : MonoBehaviour
         allTiles = new Tile[width, height];
         candyPiece = new CandyPiece[width, height];
         SetTiles();
+        SetupCandyPiece();
         //SetCamera();
-        FillBoard(10, 0.5f);
+        FillBoard(yOffset, moveTime);
         particleManager = FindObjectOfType<ParticleManager>();
     }
 
@@ -67,7 +71,7 @@ public class Board : MonoBehaviour
     private void CreateTile(GameObject _prefab, int _x, int _y)
     {
         // Create Tiles
-        if(_prefab != null)
+        if(_prefab != null && IsBound(_x, _y))
         {
             GameObject tile = Instantiate(_prefab, new Vector2(_x, _y), Quaternion.identity);
             tile.name = $"Tile({_x},{_y})";
@@ -79,7 +83,18 @@ public class Board : MonoBehaviour
         }
 
     }
-
+    void SetupCandyPiece()
+    {
+        // 시작할때 원하는 캔디 넣는 기능
+        foreach(StartTile _tile in startCandyPiece)
+        {
+            if(_tile != null)
+            {
+                GameObject piece = Instantiate(_tile.tilePrefab, new Vector2(_tile.x, _tile.y), Quaternion.identity);
+                MakeCandyPiece(piece, _tile.x, _tile.y, yOffset, moveTime);
+            }
+        }
+    }
     void SetCamera()
     {
         Camera.main.transform.position = new Vector3((width-1)/ 2f, (height-1)/ 2f, -10f);
@@ -164,26 +179,31 @@ public class Board : MonoBehaviour
     }
     CandyPiece FillRandom(int _x, int _y, int _yOffset = 0, float _time = 0.1f)
     {
-        GameObject candy = Instantiate(GetRandomCandy(), Vector2.zero, Quaternion.identity);
-
-        if (candy != null)
+        if(IsBound(_x, _y))
         {
-            candy.GetComponent<CandyPiece>().Init(this);
-            PlaceCandy(candy.GetComponent<CandyPiece>(), _x, _y);
-
-            // 위에서 캔디 생성
-            if(_yOffset != 0)
-            {
-                candy.transform.position = new Vector2(_x, _y + _yOffset);
-                candy.GetComponent<CandyPiece>().Move(_x, _y, _time);
-            }
-
-            candy.transform.parent = transform;
+            GameObject candy = Instantiate(GetRandomCandy(), Vector2.zero, Quaternion.identity);
+            MakeCandyPiece(candy, _x, _y, _yOffset, _time);
             return candy.GetComponent<CandyPiece>();
         }
         return null;
     }
+    void MakeCandyPiece(GameObject _prefab, int _x, int _y, int _yOffset = 0, float _time = 0.1f)
+    {
+        if (_prefab != null && IsBound(_x,_y))
+        {
+            _prefab.GetComponent<CandyPiece>().Init(this);
+            PlaceCandy(_prefab.GetComponent<CandyPiece>(), _x, _y);
 
+            // 위에서 캔디 생성
+            if (_yOffset != 0)
+            {
+                _prefab.transform.position = new Vector2(_x, _y + _yOffset);
+                _prefab.GetComponent<CandyPiece>().Move(_x, _y, _time);
+            }
+
+            _prefab.transform.parent = transform;
+        }
+    }
     public void ClickTile(Tile _tile)
     {
         if(clickTile == null)
@@ -559,7 +579,7 @@ public class Board : MonoBehaviour
     }
     IEnumerator RefillCoroutine()
     {
-        FillBoard(10, 0.5f);
+        FillBoard(yOffset, moveTime);
         yield return null;
     }
     IEnumerator ClearAndBreakCoroutine(List<CandyPiece> _piece)
