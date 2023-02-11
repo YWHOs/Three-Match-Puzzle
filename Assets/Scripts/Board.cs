@@ -23,6 +23,13 @@ public class Board : MonoBehaviour
 
     [SerializeField] float swapTime = 0.3f;
 
+    [Header("Collectible")]
+    [SerializeField] int maxCollectible = 3;
+    [SerializeField] int countCollectible;
+    [Range(0, 1)]
+    [SerializeField] float chanceCollectible = 0.1f;
+    [SerializeField] GameObject[] collectiblePrefabs;
+
     Tile[,] allTiles;
     CandyPiece[,] candyPiece;
 
@@ -51,6 +58,9 @@ public class Board : MonoBehaviour
         candyPiece = new CandyPiece[width, height];
         SetTiles();
         SetupCandyPiece();
+        //Collectible
+        List<CandyPiece> startCollectible = FindAllCollectible();
+        countCollectible = startCollectible.Count;
         //SetCamera();
         FillBoard(yOffset, moveTime);
         particleManager = FindObjectOfType<ParticleManager>();
@@ -659,6 +669,14 @@ public class Board : MonoBehaviour
             bombPiece = GetBombPiece(_piece);
             _piece = _piece.Union(bombPiece).ToList();
 
+            // Collectible
+            //List<CandyPiece> collectible = FindCollectible(0, true);
+            //List<CandyPiece> allCollectible = FindAllCollectible();
+            //List<CandyPiece> blocker = _piece.Intersect(allCollectible).ToList();
+            //collectible = collectible.Union(blocker).ToList();
+            //countCollectible -= collectible.Count;
+            //_piece = _piece.Union(collectible).ToList();
+
             ClearPiece(_piece);
             BreakTile(_piece);
             // 보드에 Bomb 추가
@@ -681,6 +699,11 @@ public class Board : MonoBehaviour
             }
             yield return new WaitForSeconds(0.2f);
             match = FindMatch(move);
+
+            // Collectible
+            //collectible = FindCollectible(0, true);
+            //match = match.Union(collectible).ToList();
+
             if(match.Count == 0)
             {
                 isFinish = true;
@@ -906,6 +929,83 @@ public class Board : MonoBehaviour
             return (bomb.bombType == BombType.Color);
         }
         return false;
+    }
+    //Collectible
+    List<CandyPiece> FindCollectible(int _row, bool _clearAtBottom = false)
+    {
+        List<CandyPiece> collectible = new List<CandyPiece>();
+        for (int i = 0; i < width; i++)
+        {
+            if(candyPiece[i, _row] != null)
+            {
+                Collectible collectibleComponent = candyPiece[i, _row].GetComponent<Collectible>();
+                if (collectibleComponent != null)
+                {
+                    if(!_clearAtBottom || (_clearAtBottom && collectibleComponent.clearAtBottom))
+                    {
+                        collectible.Add(candyPiece[i, _row]);
+                    }
+                }
+            }
+
+        }
+        return collectible;
+    }
+    List<CandyPiece> FindAllCollectible()
+    {
+        List<CandyPiece> collectible = new List<CandyPiece>();
+        for (int i = 0; i < height; i++)
+        {
+            List<CandyPiece> collectibleRow = FindCollectible(i);
+            collectible = collectible.Union(collectibleRow).ToList();
+        }
+        return collectible;
+    }
+    bool IsAddCollectible()
+    {
+        return (Random.Range(0f, 1f) <= chanceCollectible && collectiblePrefabs.Length > 0 && countCollectible < maxCollectible);
+    }
+    GameObject GetRandomObject(GameObject[] _object)
+    {
+        int random = Random.Range(0, _object.Length);
+        if(_object[random] == null)
+        {
+
+        }
+        return _object[random];
+    }
+    GameObject GetRandomCollectible()
+    {
+        return GetRandomObject(collectiblePrefabs);
+    }
+    CandyPiece FillRandomCollectible(int _x, int _y, int _yOffset = 0, float _time = 0.1f)
+    {
+        // In FillBoard Method
+        if(IsBound(_x, _y))
+        {
+            GameObject random = Instantiate(GetRandomCollectible(), Vector2.zero, Quaternion.identity);
+            MakeCandyPiece(random, _x, _y, _yOffset, _time);
+            return random.GetComponent<CandyPiece>();
+        }
+        return null;
+    }
+    List<CandyPiece> RemoveCollectible(List<CandyPiece> _piece)
+    {
+        // In GetBombPiece Method
+        List<CandyPiece> collectible = FindAllCollectible();
+        List<CandyPiece> remove = new List<CandyPiece>();
+        foreach(CandyPiece piece in collectible)
+        {
+            Collectible component = piece.GetComponent<Collectible>();
+            if(component != null)
+            {
+                if (!component.clearByBomb)
+                {
+                    remove.Add(piece);
+                }
+            }
+        }
+        return _piece.Except(remove).ToList();
     }
     void ElementDelete()
     {

@@ -8,7 +8,8 @@ public enum MatchValue
     Green,
     Orange,
     Purple,
-    Red
+    Red,
+    None // <- Collectible
 }
 public class CandyPiece : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class CandyPiece : MonoBehaviour
 
     bool isMoving;
     Board board;
-    public Interpolation interpolation = Interpolation.EaseOut;
+    public Interpolation interpolation = Interpolation.Linear;
     public enum Interpolation
     {
         Linear,

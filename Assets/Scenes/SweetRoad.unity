@@ -505,6 +505,18 @@ PrefabInstance:
       value: Board
       objectReference: {fileID: 0}
     - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
+      propertyPath: startCandyPiece.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
+      propertyPath: startCandyPiece.Array.data[0].x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
+      propertyPath: startCandyPiece.Array.data[0].tilePrefab
+      value: 
+      objectReference: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
       propertyPath: startCandyPiece.Array.data[2].tilePrefab
       value: 
       objectReference: {fileID: 1668693913785521425, guid: 2edabbec34e7c0e4a9bc6ea4b69fbdad, type: 3}
