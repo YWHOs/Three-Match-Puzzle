@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour
     int increase = 5;
 
     [SerializeField] Text scoreText;
-    [SerializeField] float time = 1f;
+    //[SerializeField] float time = 1f;
 
     public static ScoreManager instance;
 

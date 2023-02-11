@@ -56,6 +56,11 @@ public class Board : MonoBehaviour
         // 타일 크기 조정
         allTiles = new Tile[width, height];
         candyPiece = new CandyPiece[width, height];
+        particleManager = FindObjectOfType<ParticleManager>();
+    }
+
+    public void SetupBoard()
+    {
         SetTiles();
         SetupCandyPiece();
         //Collectible
@@ -63,7 +68,6 @@ public class Board : MonoBehaviour
         countCollectible = startCollectible.Count;
         //SetCamera();
         FillBoard(yOffset, moveTime);
-        particleManager = FindObjectOfType<ParticleManager>();
     }
 
     void SetTiles()
@@ -262,7 +266,11 @@ public class Board : MonoBehaviour
     void SwitchTile(Tile _clickTile, Tile _targetTile)
     {
         StartCoroutine(SwitchTilesCoroutine(_clickTile, _targetTile));
-
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.moveLeft--;
+            GameManager.instance.Move();
+        }
     }
     IEnumerator SwitchTilesCoroutine(Tile _clickTile, Tile _targetTile)
     {
