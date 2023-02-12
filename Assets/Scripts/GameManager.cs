@@ -83,6 +83,15 @@ public class GameManager : MonoBehaviour
     {
         while (!isGameOver)
         {
+            if(ScoreManager.instance != null)
+            {
+                // 목표점수 달성
+                if(ScoreManager.instance.CurrentScore >= scoreGoal)
+                {
+                    isGameOver = true;
+                    isWin = true;
+                }
+            }
             if(moveLeft == 0)
             {
                 isGameOver = true;
@@ -101,6 +110,10 @@ public class GameManager : MonoBehaviour
                 messageUI.GetComponent<RectXMove>().MoveOn();
                 messageUI.ShowMessage(winSprite, "WIN!!", "OK");
             }
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayWin();
+            }
         }
         else
         {
@@ -108,6 +121,10 @@ public class GameManager : MonoBehaviour
             {
                 messageUI.GetComponent<RectXMove>().MoveOn();
                 messageUI.ShowMessage(loseSprite, "YOU LOSE..", "OK");
+            }
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayLose();
             }
         }
         while (!isReload)

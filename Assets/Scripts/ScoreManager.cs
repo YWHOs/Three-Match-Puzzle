@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     int currentScore;
+    public int CurrentScore { get { return currentScore; } }
     int counterValue;
     int increase = 5;
 
