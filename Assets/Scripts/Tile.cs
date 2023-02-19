@@ -20,7 +20,7 @@ public class Tile : MonoBehaviour
     //Break
     SpriteRenderer spriteRenderer;
     public int breakValue;
-    public Sprite[] breakSprite;
+    [SerializeField] Sprite[] breakSprite;
     [SerializeField] Color normalColor;
     private void Awake()
     {
@@ -46,14 +46,14 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(board != null)
+        if(board != null && tileType != TileType.Breakable && !GameManager.instance.isGameOver)
         {
             board.ClickTile(this);
         }
     }
     void OnMouseEnter()
     {
-        if (board != null)
+        if (board != null && tileType != TileType.Breakable)
         {
             board.DragTile(this);
         }
@@ -66,6 +66,7 @@ public class Tile : MonoBehaviour
         }
     }
 
+    // 얼음 타일 깨기
     public void BreakTile()
     {
         if(tileType != TileType.Breakable) { return; }

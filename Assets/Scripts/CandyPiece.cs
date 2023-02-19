@@ -18,15 +18,9 @@ public class CandyPiece : MonoBehaviour
     [SerializeField] int score = 100;
     [SerializeField] AudioClip sound;
 
-    bool isMoving;
+    public bool isMoving;
     Board board;
-    public Interpolation interpolation = Interpolation.Linear;
-    public enum Interpolation
-    {
-        Linear,
-        EaseOut,
-        EaseIn
-    }
+
     public MatchValue matchValue;
 
     public void Init(Board _board)
@@ -66,19 +60,6 @@ public class CandyPiece : MonoBehaviour
             }
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / _time;
-
-            // 선형보간 (부드러운 효과)
-            switch (interpolation)
-            {
-                case Interpolation.Linear:
-                    break;
-                case Interpolation.EaseOut:
-                    t = Mathf.Sin(t * Mathf.PI * 0.5f);
-                    break;
-                case Interpolation.EaseIn:
-                    t = 1 - Mathf.Cos(t * Mathf.PI * 0.5f);
-                    break;
-            }
 
             transform.position = Vector2.Lerp(startPosition, _destination, t);
             yield return null;

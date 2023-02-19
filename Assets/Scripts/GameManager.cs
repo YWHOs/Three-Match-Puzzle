@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public int moveLeft = 30;
-    [SerializeField] int scoreGoal = 1000;
+        int moveLeftScore = 500;
+    [SerializeField] int scoreGoal = 5000;
 
     [SerializeField] Text moveText;
     FadeManager fadeManager;
@@ -17,8 +18,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Sprite loseSprite;
     [SerializeField] Sprite goalSprite;
 
+    [SerializeField] GameObject menu;
+
     bool isStart;
-    bool isGameOver;
+    public bool isGameOver;
     bool isWin;
     bool isReload;
     public static GameManager instance;
@@ -30,7 +33,6 @@ public class GameManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
     void Start()
     {
@@ -105,7 +107,8 @@ public class GameManager : MonoBehaviour
         isReload = false;
         if (isWin)
         {
-            if(messageUI != null)
+
+            if (messageUI != null)
             {
                 messageUI.GetComponent<RectXMove>().MoveOn();
                 messageUI.ShowMessage(winSprite, "WIN!!", "OK");
@@ -131,10 +134,30 @@ public class GameManager : MonoBehaviour
         {
             yield return null;
         }
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     public void ReloadButton()
     {
         isReload = true;
+    }
+
+    public void MenuButton()
+    {
+        if (menu.activeSelf == false)
+            menu.SetActive(true);
+        else
+            menu.SetActive(false);
+    }
+    public void MenuStartButton()
+    {
+        menu.SetActive(false);
+    }
+    public void MenuReloadButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void QuitButton()
+    {
+        Application.Quit();
     }
 }

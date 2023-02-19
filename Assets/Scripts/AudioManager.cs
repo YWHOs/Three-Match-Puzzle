@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip LoseAudio;
 
     public static AudioManager instance;
+    [SerializeField] AudioMixerGroup output;
 
     private void Awake()
     {
@@ -17,8 +19,9 @@ public class AudioManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
+
+
 
     public AudioSource PlayAudio(AudioClip _audio, float _volume = 1f)
     {
@@ -28,6 +31,7 @@ public class AudioManager : MonoBehaviour
             AudioSource source = go.AddComponent<AudioSource>();
             source.clip = _audio;
             source.volume = _volume;
+            source.outputAudioMixerGroup = output;
             source.Play();
             Destroy(go, _audio.length);
             return source;

@@ -44,8 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 7
-  height: 9
-  borderSize: 2
+  height: 7
   tilePrefab: {fileID: 8814164979061552410, guid: 583d72d8c4ced4c45aecb4bdfbe5ec4c, type: 3}
   tileObstaclePrefab: {fileID: 8814164979061552410, guid: 8af1fe6de2c177b4ab5b4864bc7eccb2, type: 3}
   candyPrefabs:
@@ -57,34 +56,38 @@ MonoBehaviour:
   rowBombPrefab: {fileID: 1668693913785521425, guid: d11631fbe1fb6bf4ebf63415186e3669, type: 3}
   columnBombPrefab: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
   nearBombPrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+  rollBombPrefab: {fileID: 1668693913785521425, guid: 4be521dc4bf806349a8bfe8bf7f53fe4, type: 3}
   colorBombPrefab: {fileID: 1668693913785521425, guid: 2edabbec34e7c0e4a9bc6ea4b69fbdad, type: 3}
-  swapTime: 0.3
   maxCollectible: 3
   countCollectible: 0
   chanceCollectible: 0.1
   collectiblePrefabs: []
-  yOffset: 10
+  swapTime: 0.3
+  yOffset: 2
   moveTime: 0.5
   startTiles:
   - tilePrefab: {fileID: 8814164979061552410, guid: 8b4a581641bfc3840a01e3730d1831a7, type: 3}
-    x: 1
-    y: 1
+    x: 0
+    y: 0
   - tilePrefab: {fileID: 8814164979061552410, guid: 8b4a581641bfc3840a01e3730d1831a7, type: 3}
     x: 5
     y: 5
-  - tilePrefab: {fileID: 8814164979061552410, guid: 1e8b3e12c9f597641886537d09d8659a, type: 3}
-    x: 2
-    y: 2
-  - tilePrefab: {fileID: 8814164979061552410, guid: 1e8b3e12c9f597641886537d09d8659a, type: 3}
-    x: 3
-    y: 3
   startCandyPiece:
+  - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+    x: 1
+    y: 1
   - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
     x: 2
     y: 1
-  - tilePrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+  - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
     x: 1
-    y: 5
-  - tilePrefab: {fileID: 1668693913785521425, guid: 2edabbec34e7c0e4a9bc6ea4b69fbdad, type: 3}
-    x: 1
+    y: 2
+  - tilePrefab: {fileID: 5456920645118060331, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+    x: 2
     y: 3
+  - tilePrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+    x: 5
+    y: 5
+  - tilePrefab: {fileID: 1668693913785521425, guid: 3b02259ae22e29a4aba8ce1a97260fc8, type: 3}
+    x: 2
+    y: 5

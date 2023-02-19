@@ -11,7 +11,6 @@ public class ScoreManager : MonoBehaviour
     int increase = 5;
 
     [SerializeField] Text scoreText;
-    //[SerializeField] float time = 1f;
 
     public static ScoreManager instance;
 
@@ -23,7 +22,6 @@ public class ScoreManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
     }
     // Start is called before the first frame update
     void Start()

@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(MaskableGraphic))]
 public class FadeManager : MonoBehaviour
 {
     [SerializeField] float time;
+    [SerializeField] Image image;
     public bool isFade;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-
-    }
     public void FadeOut()
     {
-        StartCoroutine(FadeOut(gameObject.GetComponent<Image>()));
+        StartCoroutine(FadeOut(image));
     }
     IEnumerator FadeOut(Image _object)
     {

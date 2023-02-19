@@ -101,8 +101,8 @@ MonoBehaviour:
   yIndex: 0
   score: 100
   sound: {fileID: 8300000, guid: 56e813bd88354448fb9f0a52536449a1, type: 3}
-  interpolation: 0
-  matchValue: 4
+  isMoving: 0
+  matchValue: 5
   bombType: 5
 --- !u!1001 &1668693914998222653
 PrefabInstance:
