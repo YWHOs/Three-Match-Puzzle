@@ -14,13 +14,20 @@ public class Board : MonoBehaviour
     [SerializeField] GameObject[] candyPrefabs;
 
     [Header("Bomb")]
-    [SerializeField] GameObject rowBombPrefab;
-    [SerializeField] GameObject columnBombPrefab;
-    [SerializeField] GameObject nearBombPrefab;
+    [SerializeField] GameObject[] rowBombPrefab;
+    [SerializeField] GameObject[] columnBombPrefab;
+    [SerializeField] GameObject[] nearBombPrefab;
     [SerializeField] GameObject rollBombPrefab;
     [SerializeField] GameObject colorBombPrefab;
     GameObject clickBomb;
     GameObject targetBomb;
+
+    [Header("Collectible")]
+    [SerializeField] int maxCollectible = 3;
+    [SerializeField] int countCollectible;
+    [Range(0, 1)]
+    [SerializeField] float chanceCollectible = 0.1f;
+    [SerializeField] GameObject[] collectiblePrefabs;
 
     Tile[,] allTiles;
     CandyPiece[,] candyPiece;
@@ -60,6 +67,9 @@ public class Board : MonoBehaviour
     {
         SetTiles();
         SetupCandyPiece();
+        // Collectible
+        List<CandyPiece> startCollectible = FindAllCollectible();
+        countCollectible = startCollectible.Count;
         FillBoard(yOffset, moveTime);
     }
 
@@ -978,33 +988,39 @@ public class Board : MonoBehaviour
     GameObject DropBomb (int _x, int _y, Vector2 _swap, List<CandyPiece> _piece)
     {
         GameObject bomb = null;
-        // 4개의 게임조각 이상이어야 bomb 생성
-        if(_piece.Count >= 4 && !isSquare)
+        MatchValue match = MatchValue.None;
+
+        if(_piece != null)
         {
-            if (_piece.Count >= 5)
+            match = FindMatchValue(_piece);
+        }
+        // 4개의 게임조각 이상이어야 bomb 생성
+        if (_piece.Count >= 5 && !isSquare && match != MatchValue.None)
+        {
+            if (!IsLMatch(_piece))
             {
                 bomb = MakeBomb(colorBombPrefab, _x, _y);
             }
             else
             {
-                if (IsLMatch(_piece))
-                {
-                    bomb = MakeBomb(nearBombPrefab, _x, _y);
-                }
-                else
-                {
-                    if (_swap.x != 0)
-                    {
-                        bomb = MakeBomb(rowBombPrefab, _x, _y);
-                    }
-                    else
-                    {
-                        bomb = MakeBomb(columnBombPrefab, _x, _y);
-                    }
-                }
-
+                GameObject nearBomb = FindCandyPieceMatchValue(nearBombPrefab, match);
+                bomb = MakeBomb(nearBomb, _x, _y);
             }
         }
+        else if (_piece.Count == 4 && !isSquare && match != MatchValue.None)
+        {
+            if (_swap.x != 0)
+            {
+                GameObject rowBomb = FindCandyPieceMatchValue(rowBombPrefab, match);
+                bomb = MakeBomb(rowBomb, _x, _y);
+            }
+            else
+            {
+                GameObject columnBomb = FindCandyPieceMatchValue(columnBombPrefab, match);
+                bomb = MakeBomb(columnBomb, _x, _y);
+            }
+        }
+
         if (_piece.Count >= 4 && isSquare)
         {
             bomb = MakeBomb(rollBombPrefab, _x, _y);
@@ -1052,4 +1068,109 @@ public class Board : MonoBehaviour
         return false;
     }
 
+    //Collectible
+    List<CandyPiece> FindCollectible(int _row, bool _clearAtBottom = false)
+    {
+        List<CandyPiece> collectible = new List<CandyPiece>();
+        for (int i = 0; i < width; i++)
+        {
+            if (candyPiece[i, _row] != null)
+            {
+                Collectible collectibleComponent = candyPiece[i, _row].GetComponent<Collectible>();
+                if (collectibleComponent != null)
+                {
+                    if (!_clearAtBottom || (_clearAtBottom && collectibleComponent.clearAtBottom))
+                    {
+                        collectible.Add(candyPiece[i, _row]);
+                    }
+                }
+            }
+
+        }
+        return collectible;
+    }
+    List<CandyPiece> FindAllCollectible()
+    {
+        List<CandyPiece> collectible = new List<CandyPiece>();
+        for (int i = 0; i < height; i++)
+        {
+            List<CandyPiece> collectibleRow = FindCollectible(i);
+            collectible = collectible.Union(collectibleRow).ToList();
+        }
+        return collectible;
+    }
+    bool IsAddCollectible()
+    {
+        return (Random.Range(0f, 1f) <= chanceCollectible && collectiblePrefabs.Length > 0 && countCollectible < maxCollectible);
+    }
+    GameObject GetRandomObject(GameObject[] _object)
+    {
+        int random = Random.Range(0, _object.Length);
+        if (_object[random] == null)
+        {
+
+        }
+        return _object[random];
+    }
+    GameObject GetRandomCollectible()
+    {
+        return GetRandomObject(collectiblePrefabs);
+    }
+    CandyPiece FillRandomCollectible(int _x, int _y, int _yOffset = 0, float _time = 0.1f)
+    {
+        // In FillBoard Method
+        if (IsBound(_x, _y))
+        {
+            GameObject random = Instantiate(GetRandomCollectible(), Vector2.zero, Quaternion.identity);
+            MakeCandyPiece(random, _x, _y, _yOffset, _time);
+            return random.GetComponent<CandyPiece>();
+        }
+        return null;
+    }
+    List<CandyPiece> RemoveCollectible(List<CandyPiece> _piece)
+    {
+        // In GetBombPiece Method
+        List<CandyPiece> collectible = FindAllCollectible();
+        List<CandyPiece> remove = new List<CandyPiece>();
+        foreach (CandyPiece piece in collectible)
+        {
+            Collectible component = piece.GetComponent<Collectible>();
+            if (component != null)
+            {
+                if (!component.clearByBomb)
+                {
+                    remove.Add(piece);
+                }
+            }
+        }
+        return _piece.Except(remove).ToList();
+    }
+
+    MatchValue FindMatchValue(List<CandyPiece> _piece)
+    {
+        foreach(CandyPiece piece in _piece)
+        {
+            if(piece != null)
+            {
+                return piece.matchValue;
+            }
+        }
+        return MatchValue.None;
+    }
+    GameObject FindCandyPieceMatchValue(GameObject[] _prefabs, MatchValue _match)
+    {
+        if(_match == MatchValue.None) { return null; }
+        foreach(GameObject go in _prefabs)
+        {
+            CandyPiece piece = go.GetComponent<CandyPiece>();
+            if(piece != null)
+            {
+                if(piece.matchValue == _match)
+                {
+                    return go;
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -1908,13 +1908,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc340c404384845418d210569dabaefa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveLeft: 20
-  scoreGoal: 5000
+  moveLeft: 30
+  scoreGoal: 20000
   moveText: {fileID: 372669254}
   winSprite: {fileID: 21300000, guid: ed2c330f52943ca46a9eb083123fcbb0, type: 3}
   loseSprite: {fileID: 21300000, guid: d3d2d71d03c33c248a1dbb3951f616a2, type: 3}
   goalSprite: {fileID: 21300000, guid: bf2b84d57c25d2847b4f60ba2bdc0a51, type: 3}
   menu: {fileID: 280364003}
+  isGameOver: 0
 --- !u!4 &1045179913
 Transform:
   m_ObjectHideFlags: 0
@@ -3859,110 +3860,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board
       objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[0].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[0].y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[1].x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[1].y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[2].x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[2].y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[3].x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[3].y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[6].x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[6].y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[7].x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[7].y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[8].x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[8].y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[9].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[9].y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[0].tilePrefab
-      value: 
-      objectReference: {fileID: 8814164979061552410, guid: 1e8b3e12c9f597641886537d09d8659a, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[1].tilePrefab
-      value: 
-      objectReference: {fileID: 8814164979061552410, guid: 1e8b3e12c9f597641886537d09d8659a, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[2].tilePrefab
-      value: 
-      objectReference: {fileID: 8814164979061552410, guid: 1e8b3e12c9f597641886537d09d8659a, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startTiles.Array.data[3].tilePrefab
-      value: 
-      objectReference: {fileID: 8814164979061552410, guid: 8b4a581641bfc3840a01e3730d1831a7, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[6].tilePrefab
-      value: 
-      objectReference: {fileID: 1668693913785521425, guid: d11631fbe1fb6bf4ebf63415186e3669, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[7].tilePrefab
-      value: 
-      objectReference: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[8].tilePrefab
-      value: 
-      objectReference: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
-    - target: {fileID: 7676296020168191534, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
-      propertyPath: startCandyPiece.Array.data[9].tilePrefab
-      value: 
-      objectReference: {fileID: 1668693913785521425, guid: 66e9151f2ad2a61478d94c26d791adbb, type: 3}
     - target: {fileID: 7676296020168191535, guid: 26374c2b69fa8af4baaf4f00c138e12a, type: 3}
       propertyPath: m_RootOrder
       value: 1
