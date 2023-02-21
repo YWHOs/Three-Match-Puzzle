@@ -397,10 +397,9 @@ public class Board : MonoBehaviour
                     ClearAndRefill(clickList.Union(targetList).ToList().Union(colorMatch).ToList().Union(rollMatch).ToList());
                 }
                 // 타일 이동하면 Move 감소
-                if (GameManager.instance != null)
+                if (GameManager.Instance != null)
                 {
-                    GameManager.instance.moveLeft--;
-                    GameManager.instance.Move();
+                    GameManager.Instance.Move();
                 }
             }
             yield return new WaitForSeconds(swapTime);

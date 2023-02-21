@@ -46,7 +46,7 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(board != null && tileType != TileType.Breakable && !GameManager.instance.isGameOver)
+        if(board != null && tileType != TileType.Breakable && !GameManager.Instance.isGameOver)
         {
             board.ClickTile(this);
         }

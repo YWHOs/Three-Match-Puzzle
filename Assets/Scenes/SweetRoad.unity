@@ -1890,6 +1890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045179913}
   - component: {fileID: 1045179912}
+  - component: {fileID: 1045179914}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1909,8 +1910,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc340c404384845418d210569dabaefa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveLeft: 2
-  scoreGoal: 20000
   moveText: {fileID: 372669254}
   winSprite: {fileID: 21300000, guid: ed2c330f52943ca46a9eb083123fcbb0, type: 3}
   loseSprite: {fileID: 21300000, guid: d3d2d71d03c33c248a1dbb3951f616a2, type: 3}
@@ -1931,6 +1930,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1045179914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045179911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e0c4da65c6ae245930aa10f7dcdf3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreStar: 0
+  scoreGoal: e8030000d0070000b80b0000
+  moveLeft: 30
 --- !u!1 &1122943028
 GameObject:
   m_ObjectHideFlags: 0

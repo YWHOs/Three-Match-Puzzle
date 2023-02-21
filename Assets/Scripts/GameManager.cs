@@ -4,16 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+[RequireComponent(typeof(Level))]
+public class GameManager : Singleton<GameManager>
 {
-    public int moveLeft = 30;
-        int moveLeftScore = 500;
-    [SerializeField] int scoreGoal = 5000;
+    // public int moveLeft = 30;
+    // [SerializeField] int scoreGoal = 5000;
 
     [SerializeField] Text moveText;
     FadeManager fadeManager;
     Board board;
     MessageUI messageUI;
+    Level level;
     [SerializeField] Sprite winSprite;
     [SerializeField] Sprite loseSprite;
     [SerializeField] Sprite goalSprite;
@@ -24,30 +25,29 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     bool isWin;
     bool isReload;
-    public static GameManager instance;
-    private void Awake()
+
+    public override void Awake()
     {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
+        base.Awake();
+        level = GetComponent<Level>();
+        board = FindObjectOfType<Board>().GetComponent<Board>();
     }
     void Start()
     {
         fadeManager = FindObjectOfType<FadeManager>();
         messageUI = FindObjectOfType<MessageUI>();
-        board = FindObjectOfType<Board>();
+
+        level.moveLeft++;
         Move();
         StartCoroutine(GameLoop());
     }
 
     public void Move()
     {
+        level.moveLeft--;
         if(moveText != null)
         {
-            moveText.text = moveLeft.ToString();
+            moveText.text = level.moveLeft.ToString();
         }
     }
     public void StartGameButton()
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         if(messageUI != null)
         {
             messageUI.GetComponent<RectXMove>().MoveOn();
-            messageUI.ShowMessage(goalSprite, "SCORE GOAL\n" + scoreGoal.ToString(), "START");
+            messageUI.ShowMessage(goalSprite, "SCORE GOAL\n" + level.scoreGoal[0].ToString(), "START");
         }
         while (!isStart)
         {
@@ -90,13 +90,13 @@ public class GameManager : MonoBehaviour
             if(ScoreManager.instance != null)
             {
                 // 목표점수 달성
-                if(ScoreManager.instance.CurrentScore >= scoreGoal)
+                if(ScoreManager.instance.CurrentScore >= level.scoreGoal[0])
                 {
                     isGameOver = true;
                     isWin = true;
                 }
             }
-            if(moveLeft == 0)
+            if(level.moveLeft == 0)
             {
                 isGameOver = true;
                 isWin = false;
