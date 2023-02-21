@@ -1908,7 +1908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc340c404384845418d210569dabaefa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveLeft: 30
+  moveLeft: 2
   scoreGoal: 20000
   moveText: {fileID: 372669254}
   winSprite: {fileID: 21300000, guid: ed2c330f52943ca46a9eb083123fcbb0, type: 3}

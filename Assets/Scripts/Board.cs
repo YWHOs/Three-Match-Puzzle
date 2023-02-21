@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+
+[RequireComponent(typeof(BoardDeadlock))]
 public class Board : MonoBehaviour
 {
     [Header("Board Size")]
@@ -37,7 +39,9 @@ public class Board : MonoBehaviour
     bool isClearAndRefilling = true;
     bool isSwitching;
     bool isSquare;
+    public bool isRefilling;
     ParticleManager particleManager;
+    BoardDeadlock boardDeadlock;
     [SerializeField] float swapTime = 0.3f;
     [Tooltip("캔디가 위에서 떨어지는 높이")]
     [SerializeField] int yOffset = 2;
@@ -61,6 +65,7 @@ public class Board : MonoBehaviour
         allTiles = new Tile[width, height];
         candyPiece = new CandyPiece[width, height];
         particleManager = FindObjectOfType<ParticleManager>();
+        boardDeadlock = GetComponent<BoardDeadlock>();
     }
 
     public void SetupBoard()
@@ -155,21 +160,32 @@ public class Board : MonoBehaviour
             {
                 if(candyPiece[i, j] == null && allTiles[i, j].tileType != TileType.Obstacle)
                 {
-                    CandyPiece piece = FillRandomCandy(i, j, _yOffset, _time);
-                    index = 0;
-                    // 3Match 맞는게 안 나올때까지 제거하고 생성
-                    while (IsMatchWhenFill(i, j))
+                    if (j == height - 1 && IsAddCollectible())
                     {
-                        ClearPiece(i, j);
-                        piece = FillRandomCandy(i, j, _yOffset, _time);
 
-                        // while loop break
-                        index++;
-                        if (index >= max)
+                        // add a random collectible prefab
+                        FillRandomCollectible(i, j, _yOffset, _time);
+                        countCollectible++;
+                    }
+                    else
+                    {
+                        FillRandomCandy(i, j, _yOffset, _time);
+                        index = 0;
+                        // 3Match 맞는게 안 나올때까지 제거하고 생성
+                        while (IsMatchWhenFill(i, j))
                         {
-                            break;
+                            ClearPiece(i, j);
+                            FillRandomCandy(i, j, _yOffset, _time);
+
+                            // while loop break
+                            index++;
+                            if (index >= max)
+                            {
+                                break;
+                            }
                         }
                     }
+
                 }
 
             }
@@ -697,6 +713,7 @@ public class Board : MonoBehaviour
     IEnumerator ClearAndRefillCoroutine(List<CandyPiece> _piece)
     {
         isClearAndRefilling = false;
+        isRefilling = true;
         List<CandyPiece> match = _piece;
          
         // 일치하는 항목을 찾지 못할 때까지 반복
@@ -714,6 +731,7 @@ public class Board : MonoBehaviour
         while (match.Count != 0);
 
         isClearAndRefilling = true;
+        isRefilling = false;
 
     }
     IEnumerator RefillCoroutine()
@@ -740,6 +758,14 @@ public class Board : MonoBehaviour
             bombPiece = GetBombPiece(_piece);
             _piece = _piece.Union(bombPiece).ToList();
 
+            // Collectible
+            List<CandyPiece> collectible = FindCollectible(0, true);
+            List<CandyPiece> allCollectible = FindAllCollectible();
+            List<CandyPiece> blocker = _piece.Intersect(allCollectible).ToList();
+            collectible = collectible.Union(blocker).ToList();
+            countCollectible -= collectible.Count;
+            _piece = _piece.Union(collectible).ToList();
+
             List<int> columnToBreak = GetColumn(_piece);
 
             ClearPiece(_piece);
@@ -765,7 +791,8 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             // 부셔지고 나서 매치 맞는거 찾기
             match = FindMatch(move);
-
+            collectible = FindCollectible(0, true);
+            match = match.Union(collectible).ToList();
             // 맞는게 없으면 종료 아니면 재귀
             if(match.Count == 0)
             {
@@ -948,6 +975,9 @@ public class Board : MonoBehaviour
                             break;
                     }
                     allPiece = allPiece.Union(clearPiece).ToList();
+
+                    // Bomb로만 지울수있는 캔디
+                    allPiece = RemoveCollectible(allPiece);
                 }
             }
         }

@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine("StartCoroutine");
         yield return StartCoroutine("PlayCoroutine");
+
+        yield return StartCoroutine("WaitBoardCoroutine", 0.5f);
         yield return StartCoroutine("EndCoroutine");
     }
     IEnumerator StartCoroutine()
@@ -135,6 +137,18 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    IEnumerator WaitBoardCoroutine(float _delay)
+    {
+        if(board != null)
+        {
+            yield return new WaitForSeconds(0.5f);
+            while (board.isRefilling)
+            {
+                yield return null;
+            }
+        }
+        yield return new WaitForSeconds(_delay);
     }
     public void ReloadButton()
     {
