@@ -16,14 +16,14 @@ public class BoardDeadlock : MonoBehaviour
         {
             if (_isrow)
             {
-                if(_x + i < width && _y < height)
+                if(_x + i < width && _y < height && _pieces[_x + i, _y] != null)
                 {
                     piece.Add(_pieces[_x + i, _y]);
                 }
             }
             else
             {
-                if(_x < width && _y + i < height)
+                if(_x < width && _y + i < height && _pieces[_x, _y + i] != null)
                 {
                     piece.Add(_pieces[_x, _y + i]);
                 }
@@ -77,5 +77,56 @@ public class BoardDeadlock : MonoBehaviour
             }
         }
         return neighbor;
+    }
+
+    bool IsMove(CandyPiece[,] _pieces, int _x, int _y, int _list = 3, bool _isRow = true)
+    {
+        List<CandyPiece> piece = GetRowColumn(_pieces, _x, _y, _list, _isRow);
+
+        List<CandyPiece> match = GetMinimum(piece, _list - 1);
+
+        CandyPiece unmatch = null;
+
+        if(piece != null && match != null)
+        {
+            if(piece.Count == _list && match.Count == _list - 1)
+            {
+                unmatch = piece.Except(match).FirstOrDefault();
+            }
+
+            if(unmatch != null)
+            {
+                List<CandyPiece> neighbor = GetNeighbor(_pieces, unmatch.xIndex, unmatch.yIndex);
+                neighbor = neighbor.Except(match).ToList();
+                neighbor = neighbor.FindAll(n => n.matchValue == match[0].matchValue);
+                match = match.Union(neighbor).ToList();    
+            }
+
+            if(match.Count >= _list)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsDeadlock(CandyPiece[,] _pieces, int _list = 3)
+    {
+        int width = _pieces.GetLength(0);
+        int height = _pieces.GetLength(1);
+
+        bool isDeadlock = true;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if(IsMove(_pieces, i, j, _list, true) || IsMove(_pieces, i, j, _list, false))
+                {
+                    isDeadlock = false;
+                }
+            }
+        }
+        return isDeadlock;
     }
 }

@@ -645,6 +645,11 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 ClearPiece(i, j);
+
+                if(particleManager != null)
+                {
+                    particleManager.ClearPiece(i, j);
+                }
             }
         }
     }
@@ -729,6 +734,15 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         while (match.Count != 0);
+
+        // Deadlock 확인 맞출 수 있는 게 없으면 리필
+        if(boardDeadlock.IsDeadlock(candyPiece, 3))
+        {
+            yield return new WaitForSeconds(2f);
+            ClearBoard();
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(RefillCoroutine());
+        }
 
         isClearAndRefilling = true;
         isRefilling = false;
