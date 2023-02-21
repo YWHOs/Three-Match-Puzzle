@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 [RequireComponent(typeof(BoardDeadlock))]
+[RequireComponent(typeof(BoardShuffle))]
 public class Board : MonoBehaviour
 {
     [Header("Board Size")]
@@ -42,6 +43,7 @@ public class Board : MonoBehaviour
     public bool isRefilling;
     ParticleManager particleManager;
     BoardDeadlock boardDeadlock;
+    BoardShuffle boardShuffle;
     [SerializeField] float swapTime = 0.3f;
     [Tooltip("캔디가 위에서 떨어지는 높이")]
     [SerializeField] int yOffset = 2;
@@ -66,6 +68,7 @@ public class Board : MonoBehaviour
         candyPiece = new CandyPiece[width, height];
         particleManager = FindObjectOfType<ParticleManager>();
         boardDeadlock = GetComponent<BoardDeadlock>();
+        boardShuffle = GetComponent<BoardShuffle>();
     }
 
     public void SetupBoard()
@@ -149,7 +152,60 @@ public class Board : MonoBehaviour
     {
         return (_x >= 0 && _x < width && _y >= 0 && _y < height);
     }
+    void FillBoardFromList(List<CandyPiece> _piece)
+    {
+        Queue<CandyPiece> unused = new Queue<CandyPiece>(_piece);
 
+        int max = 100;
+        int index = 0;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if(candyPiece[i, j] == null && allTiles[i,j].tileType != TileType.Obstacle)
+                {
+                    candyPiece[i, j] = unused.Dequeue();
+
+                    index = 0;
+
+                    while(IsMatchWhenFill(i, j))
+                    {
+                        unused.Enqueue(candyPiece[i, j]);
+                        candyPiece[i, j] = unused.Dequeue();
+
+                        index++;
+                        if(index >= max) { break; }
+                    }
+                }
+            }
+        }
+    }
+    public void ShuffleBoard()
+    {
+        if (isClearAndRefilling)
+        {
+            StartCoroutine(ShuffleBoardCoroutine());
+        }
+    }
+    IEnumerator ShuffleBoardCoroutine()
+    {
+        List<CandyPiece> allPiece = new List<CandyPiece>();
+        foreach(CandyPiece piece in candyPiece)
+        {
+            allPiece.Add(piece);
+        }
+        while (!IsBreak(allPiece)) { yield return null; }
+        List<CandyPiece> normal = boardShuffle.RemoveNormalCandy(candyPiece);
+
+        boardShuffle.ShuffleList(normal);
+
+        FillBoardFromList(normal);
+        boardShuffle.MovePiece(candyPiece, swapTime);
+
+        List<CandyPiece> match = FindAllMatch();
+        StartCoroutine(ClearAndRefillCoroutine(match));
+    }
     void FillBoard(int _yOffset = 0, float _time = 0.1f)
     {
         int max = 100;
@@ -738,8 +794,8 @@ public class Board : MonoBehaviour
         // Deadlock 확인 맞출 수 있는 게 없으면 리필
         if(boardDeadlock.IsDeadlock(candyPiece, 3))
         {
-            yield return new WaitForSeconds(2f);
-            ClearBoard();
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(ShuffleBoardCoroutine());
             yield return new WaitForSeconds(1f);
             yield return StartCoroutine(RefillCoroutine());
         }
@@ -827,6 +883,11 @@ public class Board : MonoBehaviour
             if(piece != null)
             {
                 if(piece.transform.position.y - piece.yIndex > 0.001f)
+                {
+                    // 캔디가 아직도 움직이고 있으면 false
+                    return false;
+                }
+                if (piece.transform.position.x - piece.xIndex > 0.001f)
                 {
                     // 캔디가 아직도 움직이고 있으면 false
                     return false;
