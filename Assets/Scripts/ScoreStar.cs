@@ -9,7 +9,7 @@ public class ScoreStar : MonoBehaviour
     [SerializeField] Particles particleStar;
     [SerializeField] float delay = 0.5f;
     [SerializeField] AudioClip starSound;
-    bool isActive = false;
+    bool isActive;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +21,7 @@ public class ScoreStar : MonoBehaviour
     {
         if (star != null)
         {
-            star.gameObject.SetActive(false);
+            star.gameObject.SetActive(_state);
         }
     }
     public void Active()

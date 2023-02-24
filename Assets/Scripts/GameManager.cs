@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     Board board;
     MessageUI messageUI;
     Level level;
+    [SerializeField] ScoreSlide scoreSlide;
     [SerializeField] Sprite winSprite;
     [SerializeField] Sprite loseSprite;
     [SerializeField] Sprite goalSprite;
@@ -36,6 +37,8 @@ public class GameManager : Singleton<GameManager>
     {
         fadeManager = FindObjectOfType<FadeManager>();
         messageUI = FindObjectOfType<MessageUI>();
+
+        scoreSlide.SetupStar(level);
 
         level.moveLeft++;
         Move();
@@ -146,6 +149,10 @@ public class GameManager : Singleton<GameManager>
             {
                 ScoreManager.Instance.AddScore(_piece.score);
                 level.UpdateScoreStar(ScoreManager.Instance.CurrentScore);
+                if(scoreSlide != null)
+                {
+                    scoreSlide.UpdateScore(ScoreManager.Instance.CurrentScore, level.scoreStar);
+                }
             }
             if (AudioManager.Instance != null)
             {

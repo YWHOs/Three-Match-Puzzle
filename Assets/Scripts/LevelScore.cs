@@ -14,6 +14,11 @@ public class LevelScore : Level
     }
     public override bool IsGameOver()
     {
+        int max = scoreGoal[scoreGoal.Length - 1];
+        if(ScoreManager.Instance.CurrentScore >= max)
+        {
+            return true;
+        }
         return (moveLeft == 0);
     }
 }
