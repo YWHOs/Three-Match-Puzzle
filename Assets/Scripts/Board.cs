@@ -394,7 +394,8 @@ public class Board : MonoBehaviour
                         if (!IsColorBomb(bombPiece) && !Is2X2Bomb(bombPiece))
                             bombPiece.ChangeColor(click);
                     }
-                    ClearAndRefill(clickList.Union(targetList).ToList().Union(colorMatch).ToList().Union(rollMatch).ToList());
+                    List<CandyPiece> pieceToClear = clickList.Union(targetList).ToList().Union(colorMatch).ToList().Union(rollMatch).ToList();
+                    yield return StartCoroutine(ClearAndRefillCoroutine(pieceToClear));
                 }
                 // 타일 이동하면 Move 감소
                 if (GameManager.Instance != null)
@@ -690,6 +691,8 @@ public class Board : MonoBehaviour
                     {
                         GameManager.Instance.AddTime(timeBonus.bonusTime);
                     }
+
+                    GameManager.Instance.UpdateCollectGoal(piece);
                 }
                 // 파티클 이펙트
                 if(particleManager != null)

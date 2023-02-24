@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     Board board;
     MessageUI messageUI;
     Level level;
+    LevelCollect levelCollect;
     LevelTime levelTime;
     public LevelTime LevelTime { get { return levelTime; } }
     [SerializeField] ScoreSlide scoreSlide;
@@ -34,6 +35,7 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
         level = GetComponent<Level>();
         levelTime = GetComponent<LevelTime>();
+        levelCollect = GetComponent<LevelCollect>();
         board = FindObjectOfType<Board>().GetComponent<Board>();
     }
     void Start()
@@ -185,7 +187,15 @@ public class GameManager : Singleton<GameManager>
     }
     public void AddTime(int _time)
     {
-        levelTime.AddTime(_time);
+        if(levelTime != null)
+        {
+            levelTime.AddTime(_time);
+        }
+
+    }
+    public void UpdateCollectGoal(CandyPiece _piece)
+    {
+        levelCollect.UpdateGoal(_piece);
     }
     public void ReloadButton()
     {

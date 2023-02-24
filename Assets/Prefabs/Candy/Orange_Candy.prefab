@@ -118,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusTime: 0
   chanceBonus: 0.1
-  glow: {fileID: 1369461356318375135, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+  glow: {fileID: 4836476393381797090}
   bonusMaterial:
   - {fileID: 2100000, guid: 37a70e431842c4da8bd54b57f79a6a15, type: 2}
   - {fileID: 2100000, guid: 6c1115aa8238945aa8a890f8d9eab054, type: 2}
@@ -138,6 +138,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 37a70e431842c4da8bd54b57f79a6a15, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
+--- !u!1 &4836476393381797090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000012706236558, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
+  m_PrefabInstance: {fileID: 4836039330968753260}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4833248449114138976 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000012339133708, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
