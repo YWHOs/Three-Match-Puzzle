@@ -21966,7 +21966,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045179913}
   - component: {fileID: 1045179912}
-  - component: {fileID: 1045179914}
+  - component: {fileID: 1045179915}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -22007,7 +22007,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1045179914
+--- !u!114 &1045179915
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -22016,12 +22016,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1045179911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4362fcc6e755dd244aa7e0c50aab5eea, type: 3}
+  m_Script: {fileID: 11500000, guid: 156cb8b33291af64aaf4edf62a3a11df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStar: 0
-  scoreGoal: c800000058020000e8030000
+  scoreGoal: e8030000d0070000b80b0000
   moveLeft: 30
+  timeLeft: 60
 --- !u!1 &1122943028
 GameObject:
   m_ObjectHideFlags: 0

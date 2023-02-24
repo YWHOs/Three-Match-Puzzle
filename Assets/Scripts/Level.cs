@@ -7,6 +7,7 @@ public abstract class Level : Singleton<Level>
     public int scoreStar;
     public int[] scoreGoal = new int[3] { 1000, 2000, 3000 };
     public int moveLeft = 30;
+    public int timeLeft = 60;
 
     void Start()
     {

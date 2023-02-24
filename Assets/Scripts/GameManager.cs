@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     Board board;
     MessageUI messageUI;
     Level level;
+    LevelTime levelTime;
     [SerializeField] ScoreSlide scoreSlide;
     [SerializeField] Sprite winSprite;
     [SerializeField] Sprite loseSprite;
@@ -31,6 +32,7 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         level = GetComponent<Level>();
+        levelTime = GetComponent<LevelTime>();
         board = FindObjectOfType<Board>().GetComponent<Board>();
     }
     void Start()
@@ -47,11 +49,24 @@ public class GameManager : Singleton<GameManager>
 
     public void Move()
     {
-        level.moveLeft--;
-        if(moveText != null)
+        if(levelTime == null)
         {
-            moveText.text = level.moveLeft.ToString();
+            level.moveLeft--;
+            if (moveText != null)
+            {
+                moveText.text = level.moveLeft.ToString();
+            }
         }
+        else
+        {
+            if(moveText != null)
+            {
+                // ¹«ÇÑ´ë TEXT
+                moveText.text = "\u221E";
+                moveText.fontSize = 70;
+            }
+        }
+
     }
     public void StartGameButton()
     {
@@ -88,6 +103,10 @@ public class GameManager : Singleton<GameManager>
     }
     IEnumerator PlayCoroutine()
     {
+        if(levelTime != null)
+        {
+            levelTime.CountTime();
+        }
         while (!isGameOver)
         {
             isWin = level.IsWin();
