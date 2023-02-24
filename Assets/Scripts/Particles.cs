@@ -6,12 +6,17 @@ public class Particles : MonoBehaviour
 {
     [SerializeField] ParticleSystem[] particles;
     [SerializeField] float time;
+    [SerializeField] bool isDestroy = true;
     // Start is called before the first frame update
     void Start()
     {
         particles = GetComponentsInChildren<ParticleSystem>();
 
-        Destroy(gameObject, time);
+        if (isDestroy)
+        {
+            Destroy(gameObject, time);
+        }
+
     }
 
     public void PlayParticle()
@@ -21,5 +26,7 @@ public class Particles : MonoBehaviour
             ps.Stop();
             ps.Play();
         }
+
+        Destroy(gameObject, time);
     }
 }

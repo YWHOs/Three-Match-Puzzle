@@ -3,23 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] AudioClip winAudio;
     [SerializeField] AudioClip LoseAudio;
-
-    public static AudioManager instance;
     [SerializeField] AudioMixerGroup output;
-
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-    }
 
 
 

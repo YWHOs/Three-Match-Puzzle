@@ -103,9 +103,9 @@ public class GameManager : Singleton<GameManager>
                 messageUI.GetComponent<RectXMove>().MoveOn();
                 messageUI.ShowMessage(winSprite, "WIN!!", "OK");
             }
-            if(AudioManager.instance != null)
+            if(AudioManager.Instance != null)
             {
-                AudioManager.instance.PlayWin();
+                AudioManager.Instance.PlayWin();
             }
         }
         else
@@ -115,9 +115,9 @@ public class GameManager : Singleton<GameManager>
                 messageUI.GetComponent<RectXMove>().MoveOn();
                 messageUI.ShowMessage(loseSprite, "YOU LOSE..", "OK");
             }
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.PlayLose();
+                AudioManager.Instance.PlayLose();
             }
         }
         while (!isReload)
@@ -147,9 +147,9 @@ public class GameManager : Singleton<GameManager>
                 ScoreManager.Instance.AddScore(_piece.score);
                 level.UpdateScoreStar(ScoreManager.Instance.CurrentScore);
             }
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.PlayAudio(_piece.sound, 0.2f);
+                AudioManager.Instance.PlayAudio(_piece.sound, 0.2f);
             }
         }
 
