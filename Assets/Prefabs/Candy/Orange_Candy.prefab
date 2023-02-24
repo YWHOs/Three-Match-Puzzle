@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6567190216646729128}
   - component: {fileID: 6567190216646729143}
   - component: {fileID: 4923519263281599030}
+  - component: {fileID: 3881250642947391032}
   m_Layer: 0
   m_Name: Orange_Candy
   m_TagString: Untagged
@@ -28,7 +29,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4833248449114138976}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,5 +102,44 @@ MonoBehaviour:
   yIndex: 0
   score: 100
   sound: {fileID: 8300000, guid: eadcfb9a0c2cb4bea8112ac470640c8e, type: 3}
-  interpolation: 0
+  isMoving: 0
   matchValue: 2
+--- !u!114 &3881250642947391032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6567190216646729142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3916b08d6fcf80b44aa18edd99c0c7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bonusTime: 0
+  chanceBonus: 0.1
+  glow: {fileID: 1369461356318375135, guid: 3c07a952c7474fb4598564845a7233bc, type: 3}
+  bonusMaterial:
+  - {fileID: 2100000, guid: 37a70e431842c4da8bd54b57f79a6a15, type: 2}
+  - {fileID: 2100000, guid: 6c1115aa8238945aa8a890f8d9eab054, type: 2}
+  - {fileID: 2100000, guid: f9abcc6651fa740c8b13e5a68041d9f1, type: 2}
+  - {fileID: 2100000, guid: 0be551819c18d475d8b62058253297a4, type: 2}
+  - {fileID: 2100000, guid: b86a977f1328a43588158f40baa66678, type: 2}
+--- !u!1001 &4836039330968753260
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6567190216646729128}
+    m_Modifications:
+    - target: {fileID: 199000013523851056, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 37a70e431842c4da8bd54b57f79a6a15, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
+--- !u!4 &4833248449114138976 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4000012339133708, guid: 046759283fbd6427a954188bd09e9b65, type: 3}
+  m_PrefabInstance: {fileID: 4836039330968753260}
+  m_PrefabAsset: {fileID: 0}

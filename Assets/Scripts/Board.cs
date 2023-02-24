@@ -685,6 +685,11 @@ public class Board : MonoBehaviour
                 if(GameManager.Instance != null)
                 {
                     GameManager.Instance.Score(piece);
+                    TimeBonus timeBonus = piece.GetComponent<TimeBonus>();
+                    if(timeBonus != null)
+                    {
+                        GameManager.Instance.AddTime(timeBonus.bonusTime);
+                    }
                 }
                 // 파티클 이펙트
                 if(particleManager != null)

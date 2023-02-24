@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     MessageUI messageUI;
     Level level;
     LevelTime levelTime;
+    public LevelTime LevelTime { get { return levelTime; } }
     [SerializeField] ScoreSlide scoreSlide;
     [SerializeField] Sprite winSprite;
     [SerializeField] Sprite loseSprite;
@@ -150,6 +151,8 @@ public class GameManager : Singleton<GameManager>
     }
     IEnumerator WaitBoardCoroutine(float _delay)
     {
+        levelTime.timer.StopFlash();
+        levelTime.timer.isPaused = true;
         if(board != null)
         {
             yield return new WaitForSeconds(0.5f);
@@ -179,6 +182,10 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
+    }
+    public void AddTime(int _time)
+    {
+        levelTime.AddTime(_time);
     }
     public void ReloadButton()
     {

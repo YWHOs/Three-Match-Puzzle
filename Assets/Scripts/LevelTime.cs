@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class LevelTime : Level
 {
+    public Timer timer;
+    int max;
+
+    private void Start()
+    {
+        timer.InitTime(timeLeft);
+        max = timeLeft;
+    }
     public void CountTime()
     {
         StartCoroutine(CountTimeCoroutine());
@@ -14,6 +22,8 @@ public class LevelTime : Level
         {
             yield return new WaitForSeconds(1f);
             timeLeft--;
+
+            timer.UpdateTime(timeLeft);
         }
     }
     public override bool IsWin()
@@ -32,5 +42,13 @@ public class LevelTime : Level
             return true;
         }
         return (timeLeft <= 0);
+    }
+
+    public void AddTime(int _time)
+    {
+        timeLeft += _time;
+        timeLeft = Mathf.Clamp(timeLeft, 0, max);
+
+        timer.UpdateTime(timeLeft);
     }
 }
