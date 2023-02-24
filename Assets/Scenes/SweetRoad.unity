@@ -1939,11 +1939,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1045179911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66e0c4da65c6ae245930aa10f7dcdf3a, type: 3}
+  m_Script: {fileID: 11500000, guid: 4362fcc6e755dd244aa7e0c50aab5eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStar: 0
-  scoreGoal: e8030000d0070000b80b0000
+  scoreGoal: c8000000d0070000b80b0000
   moveLeft: 30
 --- !u!1 &1122943028
 GameObject:

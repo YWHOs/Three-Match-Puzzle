@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : Singleton<ScoreManager>
 {
     int currentScore;
     public int CurrentScore { get { return currentScore; } }
@@ -12,17 +12,6 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] Text scoreText;
 
-    public static ScoreManager instance;
-
-    private void Awake()
-    {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-    }
     // Start is called before the first frame update
     void Start()
     {

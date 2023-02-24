@@ -15,8 +15,8 @@ public class CandyPiece : MonoBehaviour
 {
     public int xIndex;
     public int yIndex;
-    [SerializeField] int score = 100;
-    [SerializeField] AudioClip sound;
+    public int score = 100;
+    public AudioClip sound;
 
     public bool isMoving;
     Board board;
@@ -81,17 +81,6 @@ public class CandyPiece : MonoBehaviour
             }
 
             matchValue = _piece.matchValue;
-        }
-    }
-    public void Score()
-    {
-        if(ScoreManager.instance != null)
-        {
-            ScoreManager.instance.AddScore(score);
-        }
-        if(AudioManager.instance != null)
-        {
-            AudioManager.instance.PlayAudio(sound, 0.2f);
         }
     }
 }

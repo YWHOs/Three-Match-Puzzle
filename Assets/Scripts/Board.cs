@@ -682,7 +682,10 @@ public class Board : MonoBehaviour
             {
                 ClearPiece(piece.xIndex, piece.yIndex);
                 // Score
-                piece.Score();
+                if(GameManager.Instance != null)
+                {
+                    GameManager.Instance.Score(piece);
+                }
                 // 파티클 이펙트
                 if(particleManager != null)
                 {

@@ -87,20 +87,8 @@ public class GameManager : Singleton<GameManager>
     {
         while (!isGameOver)
         {
-            if(ScoreManager.instance != null)
-            {
-                // 목표점수 달성
-                if(ScoreManager.instance.CurrentScore >= level.scoreGoal[0])
-                {
-                    isGameOver = true;
-                    isWin = true;
-                }
-            }
-            if(level.moveLeft == 0)
-            {
-                isGameOver = true;
-                isWin = false;
-            }
+            isWin = level.IsWin();
+            isGameOver = level.IsGameOver();
             yield return null;
         }
     }
@@ -149,6 +137,22 @@ public class GameManager : Singleton<GameManager>
             }
         }
         yield return new WaitForSeconds(_delay);
+    }
+    public void Score(CandyPiece _piece)
+    {
+        if(_piece != null)
+        {
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.AddScore(_piece.score);
+                level.UpdateScoreStar(ScoreManager.Instance.CurrentScore);
+            }
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayAudio(_piece.sound, 0.2f);
+            }
+        }
+
     }
     public void ReloadButton()
     {
