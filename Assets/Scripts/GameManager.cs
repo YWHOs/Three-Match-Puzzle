@@ -11,9 +11,7 @@ public class GameManager : Singleton<GameManager>
     Level level;
     LevelCollect levelCollect;
     public Level Level { get { return level; } }
-    [SerializeField] Sprite winSprite;
-    [SerializeField] Sprite loseSprite;
-    [SerializeField] Sprite goalSprite;
+
 
     [SerializeField] GameObject menu;
 
@@ -96,7 +94,8 @@ public class GameManager : Singleton<GameManager>
         if(UIManager.Instance.messageUI != null)
         {
             UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
-            UIManager.Instance.messageUI.ShowMessage(goalSprite, "SCORE GOAL\n" + level.scoreGoal[0].ToString(), "START");
+            int max = level.scoreGoal.Length - 1;
+            UIManager.Instance.messageUI.ShowScore(level.scoreGoal[max]);
         }
         while (!isStart)
         {
@@ -134,7 +133,7 @@ public class GameManager : Singleton<GameManager>
             if (UIManager.Instance.messageUI != null)
             {
                 UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
-                UIManager.Instance.messageUI.ShowMessage(winSprite, "WIN!!", "OK");
+                UIManager.Instance.messageUI.ShowWin();
             }
             if(AudioManager.Instance != null)
             {
@@ -146,7 +145,7 @@ public class GameManager : Singleton<GameManager>
             if (UIManager.Instance.messageUI != null)
             {
                 UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
-                UIManager.Instance.messageUI.ShowMessage(loseSprite, "YOU LOSE..", "OK");
+                UIManager.Instance.messageUI.ShowLose();
             }
             if (AudioManager.Instance != null)
             {

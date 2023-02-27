@@ -22379,9 +22379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc340c404384845418d210569dabaefa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winSprite: {fileID: 21300000, guid: ed2c330f52943ca46a9eb083123fcbb0, type: 3}
-  loseSprite: {fileID: 21300000, guid: d3d2d71d03c33c248a1dbb3951f616a2, type: 3}
-  goalSprite: {fileID: 21300000, guid: bf2b84d57c25d2847b4f60ba2bdc0a51, type: 3}
   menu: {fileID: 280364003}
   isGameOver: 0
 --- !u!4 &1045179913
@@ -32884,6 +32881,9 @@ MonoBehaviour:
   icon: {fileID: 2052545166}
   messageText: {fileID: 1885811929}
   buttonText: {fileID: 982858166}
+  winSprite: {fileID: 21300000, guid: ed2c330f52943ca46a9eb083123fcbb0, type: 3}
+  loseSprite: {fileID: 21300000, guid: d3d2d71d03c33c248a1dbb3951f616a2, type: 3}
+  goalSprite: {fileID: 21300000, guid: bf2b84d57c25d2847b4f60ba2bdc0a51, type: 3}
 --- !u!1 &1329764615
 GameObject:
   m_ObjectHideFlags: 0
@@ -43154,7 +43154,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 50
+  m_Text: 0
 --- !u!222 &1623393127
 CanvasRenderer:
   m_ObjectHideFlags: 0
