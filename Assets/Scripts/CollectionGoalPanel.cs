@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CollectionGoalPanel : MonoBehaviour
 {
-    [SerializeField] CollectGoal collectGoal;
+    public CollectGoal collectGoal;
     [SerializeField] Text leftText;
     [SerializeField] Image image;
 

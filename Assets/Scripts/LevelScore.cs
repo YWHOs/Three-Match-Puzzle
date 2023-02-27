@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class LevelScore : Level
 {
+    public override void Start()
+    {
+        levelCounter = LevelCounter.Move;
+        base.Start();
+    }
     public override bool IsWin()
     {
         if(ScoreManager.Instance != null)

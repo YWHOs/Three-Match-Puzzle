@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelCollect : Level
 {
     public CollectGoal[] collectGoal;
-    public CollectionGoalPanel[] collectionGoalPanels;
 
     public void UpdateGoal(CandyPiece _piece)
     {
@@ -23,12 +22,9 @@ public class LevelCollect : Level
     }
     public void UpdateUI()
     {
-        foreach(CollectionGoalPanel panel in collectionGoalPanels)
+        if(UIManager.Instance != null)
         {
-            if(panel != null)
-            {
-                panel.UpdatePanel();
-            }
+            UIManager.Instance.UpdateCollection();
         }
     }
     bool IsGoal(CollectGoal[] _goals)
@@ -63,6 +59,13 @@ public class LevelCollect : Level
                 return true;
             }
         }
-        return (moveLeft <= 0);
+        if(levelCounter == LevelCounter.Timer)
+        {
+            return (timeLeft <= 0);
+        }
+        else
+        {
+            return (moveLeft <= 0);
+        }
     }
 }

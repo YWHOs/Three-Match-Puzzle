@@ -7,18 +7,10 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Level))]
 public class GameManager : Singleton<GameManager>
 {
-    // public int moveLeft = 30;
-    // [SerializeField] int scoreGoal = 5000;
-
-    [SerializeField] Text moveText;
-    FadeManager fadeManager;
     Board board;
-    MessageUI messageUI;
     Level level;
     LevelCollect levelCollect;
-    LevelTime levelTime;
-    public LevelTime LevelTime { get { return levelTime; } }
-    [SerializeField] ScoreSlide scoreSlide;
+    public Level Level { get { return level; } }
     [SerializeField] Sprite winSprite;
     [SerializeField] Sprite loseSprite;
     [SerializeField] Sprite goalSprite;
@@ -34,16 +26,32 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         level = GetComponent<Level>();
-        levelTime = GetComponent<LevelTime>();
         levelCollect = GetComponent<LevelCollect>();
         board = FindObjectOfType<Board>().GetComponent<Board>();
     }
     void Start()
     {
-        fadeManager = FindObjectOfType<FadeManager>();
-        messageUI = FindObjectOfType<MessageUI>();
+        if(UIManager.Instance != null)
+        {
+            if (UIManager.Instance.scoreSlide != null)
+            {
+                UIManager.Instance.scoreSlide.SetupStar(level);
+            }
+            if (levelCollect != null)
+            {
+                UIManager.Instance.EnableCollection(true);
+                UIManager.Instance.Setup(levelCollect.collectGoal);
+            }
+            else
+            {
+                UIManager.Instance.EnableCollection(false);
+            }
 
-        scoreSlide.SetupStar(level);
+            bool isTimer = (level.levelCounter == LevelCounter.Timer);
+
+            UIManager.Instance.EnableTimer(isTimer);
+            UIManager.Instance.EnableMove(!isTimer);
+        }
 
         level.moveLeft++;
         Move();
@@ -52,23 +60,23 @@ public class GameManager : Singleton<GameManager>
 
     public void Move()
     {
-        if(levelTime == null)
+        if(level.levelCounter == LevelCounter.Move)
         {
             level.moveLeft--;
-            if (moveText != null)
+            if (UIManager.Instance.moveText != null)
             {
-                moveText.text = level.moveLeft.ToString();
+                UIManager.Instance.moveText.text = level.moveLeft.ToString();
             }
         }
-        else
-        {
-            if(moveText != null)
-            {
-                // 무한대 TEXT
-                moveText.text = "\u221E";
-                moveText.fontSize = 70;
-            }
-        }
+        //else
+        //{
+        //    if(UIManager.Instance.moveText != null)
+        //    {
+        //        // 무한대 TEXT
+        //        UIManager.Instance.moveText.text = "\u221E";
+        //        UIManager.Instance.moveText.fontSize = 70;
+        //    }
+        //}
 
     }
     public void StartGameButton()
@@ -85,20 +93,20 @@ public class GameManager : Singleton<GameManager>
     }
     IEnumerator StartCoroutine()
     {
-        if(messageUI != null)
+        if(UIManager.Instance.messageUI != null)
         {
-            messageUI.GetComponent<RectXMove>().MoveOn();
-            messageUI.ShowMessage(goalSprite, "SCORE GOAL\n" + level.scoreGoal[0].ToString(), "START");
+            UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
+            UIManager.Instance.messageUI.ShowMessage(goalSprite, "SCORE GOAL\n" + level.scoreGoal[0].ToString(), "START");
         }
         while (!isStart)
         {
             yield return null;
         }
-        if(fadeManager != null)
+        if(UIManager.Instance.fadeManager != null)
         {
-            fadeManager.FadeOut();
+            UIManager.Instance.fadeManager.FadeOut();
         }
-        yield return new WaitUntil(() => !fadeManager.isFade);
+        yield return new WaitUntil(() => !UIManager.Instance.fadeManager.isFade);
         if(board != null)
         {
             board.SetupBoard();
@@ -106,9 +114,9 @@ public class GameManager : Singleton<GameManager>
     }
     IEnumerator PlayCoroutine()
     {
-        if(levelTime != null)
+        if(level.levelCounter == LevelCounter.Timer)
         {
-            levelTime.CountTime();
+            level.CountTime();
         }
         while (!isGameOver)
         {
@@ -123,10 +131,10 @@ public class GameManager : Singleton<GameManager>
         if (isWin)
         {
 
-            if (messageUI != null)
+            if (UIManager.Instance.messageUI != null)
             {
-                messageUI.GetComponent<RectXMove>().MoveOn();
-                messageUI.ShowMessage(winSprite, "WIN!!", "OK");
+                UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
+                UIManager.Instance.messageUI.ShowMessage(winSprite, "WIN!!", "OK");
             }
             if(AudioManager.Instance != null)
             {
@@ -135,10 +143,10 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            if (messageUI != null)
+            if (UIManager.Instance.messageUI != null)
             {
-                messageUI.GetComponent<RectXMove>().MoveOn();
-                messageUI.ShowMessage(loseSprite, "YOU LOSE..", "OK");
+                UIManager.Instance.messageUI.GetComponent<RectXMove>().MoveOn();
+                UIManager.Instance.messageUI.ShowMessage(loseSprite, "YOU LOSE..", "OK");
             }
             if (AudioManager.Instance != null)
             {
@@ -153,8 +161,12 @@ public class GameManager : Singleton<GameManager>
     }
     IEnumerator WaitBoardCoroutine(float _delay)
     {
-        levelTime.timer.StopFlash();
-        levelTime.timer.isPaused = true;
+        if(level.levelCounter == LevelCounter.Timer && UIManager.Instance != null && UIManager.Instance.timer != null)
+        {
+            UIManager.Instance.timer.StopFlash();
+            UIManager.Instance.timer.isPaused = true;
+        }
+
         if(board != null)
         {
             yield return new WaitForSeconds(0.5f);
@@ -173,9 +185,9 @@ public class GameManager : Singleton<GameManager>
             {
                 ScoreManager.Instance.AddScore(_piece.score);
                 level.UpdateScoreStar(ScoreManager.Instance.CurrentScore);
-                if(scoreSlide != null)
+                if(UIManager.Instance.scoreSlide != null)
                 {
-                    scoreSlide.UpdateScore(ScoreManager.Instance.CurrentScore, level.scoreStar);
+                    UIManager.Instance.scoreSlide.UpdateScore(ScoreManager.Instance.CurrentScore, level.scoreStar);
                 }
             }
             if (AudioManager.Instance != null)
@@ -187,9 +199,9 @@ public class GameManager : Singleton<GameManager>
     }
     public void AddTime(int _time)
     {
-        if(levelTime != null)
+        if(level.levelCounter == LevelCounter.Timer)
         {
-            levelTime.AddTime(_time);
+            level.AddTime(_time);
         }
 
     }

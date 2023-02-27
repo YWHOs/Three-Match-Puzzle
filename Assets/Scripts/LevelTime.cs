@@ -4,28 +4,14 @@ using UnityEngine;
 
 public class LevelTime : Level
 {
-    public Timer timer;
-    int max;
+    //public Timer timer;
 
-    private void Start()
+    public override void Start()
     {
-        timer.InitTime(timeLeft);
-        max = timeLeft;
+        levelCounter = LevelCounter.Timer;
+        base.Start();
     }
-    public void CountTime()
-    {
-        StartCoroutine(CountTimeCoroutine());
-    }
-    IEnumerator CountTimeCoroutine()
-    {
-        while(timeLeft > 0)
-        {
-            yield return new WaitForSeconds(1f);
-            timeLeft--;
 
-            timer.UpdateTime(timeLeft);
-        }
-    }
     public override bool IsWin()
     {
         if (ScoreManager.Instance != null)
@@ -44,11 +30,4 @@ public class LevelTime : Level
         return (timeLeft <= 0);
     }
 
-    public void AddTime(int _time)
-    {
-        timeLeft += _time;
-        timeLeft = Mathf.Clamp(timeLeft, 0, max);
-
-        timer.UpdateTime(timeLeft);
-    }
 }

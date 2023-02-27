@@ -20,7 +20,7 @@ public class TimeBonus : MonoBehaviour
         {
             bonusTime = 0;
         }
-        if(GameManager.Instance.LevelTime == null)
+        if(GameManager.Instance.Level.levelCounter == LevelCounter.Timer)
         {
             bonusTime = 0;
         }

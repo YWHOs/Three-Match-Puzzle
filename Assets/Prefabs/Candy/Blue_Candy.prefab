@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusTime: 0
-  chanceBonus: 0.1
+  chanceBonus: 0.44
   glow: {fileID: 1369461356318375135}
   bonusMaterial:
   - {fileID: 2100000, guid: 37a70e431842c4da8bd54b57f79a6a15, type: 2}
