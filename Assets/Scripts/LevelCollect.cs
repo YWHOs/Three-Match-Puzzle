@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelCollect : Level
 {
     public CollectGoal[] collectGoal;
+    public CollectionGoalPanel[] collectionGoalPanels;
 
     public void UpdateGoal(CandyPiece _piece)
     {
@@ -16,6 +17,17 @@ public class LevelCollect : Level
                 {
                     goal.CollectPiece(_piece);
                 }
+            }
+        }
+        UpdateUI();
+    }
+    public void UpdateUI()
+    {
+        foreach(CollectionGoalPanel panel in collectionGoalPanels)
+        {
+            if(panel != null)
+            {
+                panel.UpdatePanel();
             }
         }
     }
