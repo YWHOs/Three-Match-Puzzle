@@ -781,6 +781,16 @@ public class Board : MonoBehaviour
     {
         StartCoroutine(ClearAndRefillCoroutine(_piece));
     }
+    public void ClearAndRefill(int _x, int _y)
+    {
+        if(IsBound(_x, _y))
+        {
+            CandyPiece piece = candyPiece[_x, _y];
+            List<CandyPiece> list = new List<CandyPiece>();
+            list.Add(piece);
+            ClearAndRefill(list);
+        }
+    }
     IEnumerator ClearAndRefillCoroutine(List<CandyPiece> _piece)
     {
         isClearAndRefilling = false;
@@ -943,6 +953,20 @@ public class Board : MonoBehaviour
             return bomb;
         }
         return null;
+    }
+    public void MakeColorBomb(int _x, int _y)
+    {
+        if(IsBound(_x, _y))
+        {
+            CandyPiece piece = candyPiece[_x, _y];
+
+            if(piece != null)
+            {
+                ClearPiece(_x, _y);
+                GameObject bomb = MakeBomb(colorBombPrefab, _x, _y);
+                NoRefillWhenBomb(bomb);
+            }
+        }
     }
     // 행 목록 가져오기
     List<CandyPiece> GetRowPiece(int _row)

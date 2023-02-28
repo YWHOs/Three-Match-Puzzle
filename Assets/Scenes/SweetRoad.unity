@@ -445,11 +445,11 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116480444}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1617.9775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 744360597}
+  m_Father: {fileID: 1453044467}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
@@ -567,7 +567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &127998272
 RectTransform:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ RectTransform:
   m_Children:
   - {fileID: 46817606}
   m_Father: {fileID: 744360597}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -16832,8 +16832,6 @@ RectTransform:
   - {fileID: 2056484935}
   - {fileID: 1980235147}
   - {fileID: 574452341}
-  - {fileID: 116480445}
-  - {fileID: 1688807055}
   - {fileID: 127998272}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -17220,7 +17218,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: ADD INSTRUCTIONS FOR BOOSTER HERE
+  m_Text: 
 --- !u!222 &859732568
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17599,8 +17597,9 @@ GameObject:
   - component: {fileID: 986766158}
   - component: {fileID: 986766160}
   - component: {fileID: 986766159}
+  - component: {fileID: 986766161}
   m_Layer: 5
-  m_Name: Booster
+  m_Name: ColorBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17664,6 +17663,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986766157}
   m_CullTransparentMesh: 1
+--- !u!114 &986766161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986766157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3544fdf34a03afe47b502324bc435fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile: {fileID: 0}
+  itemText: {fileID: 0}
+  instruct: 
+  canvasGroups: []
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 986766161}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: MakeColorBomb
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  time: 15
 --- !u!1 &995142020
 GameObject:
   m_ObjectHideFlags: 0
@@ -17677,7 +17708,7 @@ GameObject:
   - component: {fileID: 995142023}
   - component: {fileID: 995142022}
   m_Layer: 5
-  m_Name: Booster2
+  m_Name: Item2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17746,7 +17777,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 995142023}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1858895741}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: ToogleItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &995142023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22821,12 +22864,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStar: 0
-  scoreGoal: e8030000d0070000b80b0000
+  scoreGoal: bc020000c409000088130000
   moveLeft: 30
   timeLeft: 60
   levelCounter: 0
-  collectGoal:
-  - {fileID: 1848464640}
+  collectGoal: []
 --- !u!1 &1122943028
 GameObject:
   m_ObjectHideFlags: 0
@@ -38193,7 +38235,7 @@ GameObject:
   - component: {fileID: 1340774208}
   - component: {fileID: 1340774207}
   m_Layer: 5
-  m_Name: Booster1
+  m_Name: Item1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38262,7 +38304,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1340774208}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1955039449}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: ToogleItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1340774208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43263,6 +43317,8 @@ RectTransform:
   - {fileID: 1340774206}
   - {fileID: 995142021}
   - {fileID: 1800901390}
+  - {fileID: 116480445}
+  - {fileID: 1688807055}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48785,11 +48841,11 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688807054}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1617.9775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 744360597}
+  m_Father: {fileID: 1453044467}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
@@ -49304,7 +49360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1792011217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49428,7 +49484,7 @@ GameObject:
   - component: {fileID: 1800901392}
   - component: {fileID: 1800901391}
   m_Layer: 5
-  m_Name: Booster3
+  m_Name: Item3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49497,7 +49553,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1800901392}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 986766161}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: ToogleItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1800901392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49631,7 +49699,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1848464640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49639,7 +49707,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848464639}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61c779493d263e44ba88320acb515e72, type: 3}
   m_Name: 
@@ -49746,8 +49814,9 @@ GameObject:
   - component: {fileID: 1858895738}
   - component: {fileID: 1858895740}
   - component: {fileID: 1858895739}
+  - component: {fileID: 1858895741}
   m_Layer: 5
-  m_Name: Booster
+  m_Name: AddTime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49811,6 +49880,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858895737}
   m_CullTransparentMesh: 1
+--- !u!114 &1858895741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858895737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3544fdf34a03afe47b502324bc435fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile: {fileID: 0}
+  itemText: {fileID: 0}
+  instruct: 
+  canvasGroups: []
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1858895741}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: AddTime
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  time: 15
 --- !u!1 &1885811927
 GameObject:
   m_ObjectHideFlags: 0
@@ -50055,8 +50156,9 @@ GameObject:
   - component: {fileID: 1955039446}
   - component: {fileID: 1955039448}
   - component: {fileID: 1955039447}
+  - component: {fileID: 1955039449}
   m_Layer: 5
-  m_Name: Booster
+  m_Name: Remove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50120,6 +50222,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1955039445}
   m_CullTransparentMesh: 1
+--- !u!114 &1955039449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955039445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3544fdf34a03afe47b502324bc435fc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile: {fileID: 0}
+  itemText: {fileID: 0}
+  instruct: 
+  canvasGroups: []
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1955039449}
+        m_TargetAssemblyTypeName: Item, Assembly-CSharp
+        m_MethodName: RemoveCandy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  time: 15
 --- !u!1 &1980235146
 GameObject:
   m_ObjectHideFlags: 0

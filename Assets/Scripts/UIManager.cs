@@ -7,7 +7,6 @@ public class UIManager : Singleton<UIManager>
 {
     [SerializeField] GameObject layout;
     [SerializeField] int baseWidth = 125;
-    CollectionGoalPanel[] collectionGoalPanels;
 
     public Text moveText;
     public FadeManager fadeManager;
@@ -58,17 +57,28 @@ public class UIManager : Singleton<UIManager>
     {
         Setup(_goal, layout);
     }
-    public void UpdateCollection()
+    void UpdateCollection(GameObject _layout)
     {
-        foreach(CollectionGoalPanel panel in collectionGoalPanels)
+        if(_layout != null)
         {
-            if(panel != null && panel.gameObject.activeInHierarchy)
+            CollectionGoalPanel[] panels = _layout.GetComponentsInChildren<CollectionGoalPanel>();
+            if(panels != null && panels.Length != 0)
             {
-                panel.UpdatePanel();
+                foreach (CollectionGoalPanel panel in panels)
+                {
+                    if (panel != null && panel.isActiveAndEnabled)
+                    {
+                        panel.UpdatePanel();
+                    }
+                }
             }
         }
-    }
 
+    }
+    public void UpdateCollection()
+    {
+        UpdateCollection(layout);
+    }
     public void EnableTimer(bool _state)
     {
         if(timer != null)
@@ -85,7 +95,7 @@ public class UIManager : Singleton<UIManager>
     }
     public void EnableCollection(bool _state)
     {
-        if(layout != null)
+        if(layout != null && layout.activeSelf == true)
         {
             layout.SetActive(_state);
         }

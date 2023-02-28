@@ -17,7 +17,7 @@ public class CollectionGoalPanel : MonoBehaviour
 
     public void Setup()
     {
-        if(collectGoal != null && leftText != null)
+        if(collectGoal != null && leftText != null && image != null)
         {
             SpriteRenderer renderer = collectGoal.prefab.GetComponent<SpriteRenderer>();
 
@@ -30,6 +30,7 @@ public class CollectionGoalPanel : MonoBehaviour
 
     public void UpdatePanel()
     {
-        leftText.text = collectGoal.numberCollect.ToString();
+        if(collectGoal != null && leftText != null)
+            leftText.text = collectGoal.numberCollect.ToString();
     }
 }
